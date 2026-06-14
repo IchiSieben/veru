@@ -1,6 +1,6 @@
 // Carrito: alta, render del drawer y subtotal. Imágenes vía thumb optimizado.
 import { byId, money, $ } from './data.js';
-import { state, updateBadges, bump } from './store.js';
+import { state, updateBadges, bump, persist } from './store.js';
 import { openDrawer } from './ui.js';
 
 export function addToCart(id, size) {
@@ -10,6 +10,7 @@ export function addToCart(id, size) {
   const ex = state.cart.find((i) => i.key === key);
   if (ex) ex.q++;
   else state.cart.push({ key, id, size: size || p.sizes[1] || p.sizes[0], q: 1 });
+  persist();
   renderCart();
   bump('#cartBadge');
   openDrawer('#cartDrawer');
@@ -51,6 +52,7 @@ export function renderCart() {
     (b) =>
       (b.onclick = () => {
         state.cart.find((i) => i.key === b.dataset.inc).q++;
+        persist();
         renderCart();
         bump('#cartBadge');
       })
@@ -61,6 +63,7 @@ export function renderCart() {
         const it = state.cart.find((i) => i.key === b.dataset.dec);
         it.q--;
         if (it.q <= 0) state.cart = state.cart.filter((i) => i !== it);
+        persist();
         renderCart();
         updateBadges();
       })
@@ -69,6 +72,7 @@ export function renderCart() {
     (b) =>
       (b.onclick = () => {
         state.cart = state.cart.filter((i) => i.key !== b.dataset.rm);
+        persist();
         renderCart();
         updateBadges();
       })

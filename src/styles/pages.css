@@ -86,3 +86,95 @@
   .pdp__actions{flex-direction:column}
   .pdp__actions .btn,.pdp__wa{min-width:0;width:100%}
 }
+
+/* ============================================================
+   CHECKOUT
+   ============================================================ */
+.co{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,4vw,56px);
+  align-items:start;padding-block:clamp(20px,3vw,36px)}
+.co__head h1{font-family:var(--display);font-weight:500;font-size:clamp(2rem,4vw,2.8rem);
+  line-height:1.05;letter-spacing:-.01em;margin-bottom:.3rem}
+.co__head p{color:var(--on-light-soft);font-size:.95rem;margin-bottom:1.6rem}
+
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--on-light-soft);font-weight:600;margin-bottom:.45rem}
+.field input,.field select,.field textarea{
+  width:100%;font-family:var(--ui);font-size:.95rem;color:var(--on-light);
+  background:var(--paper);border:1px solid var(--sand);border-radius:var(--r);padding:.85em 1em;
+  transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--mauve-deep)}
+.field textarea{resize:vertical;min-height:72px}
+.field.invalid input,.field.invalid select{border-color:#c0556f}
+.field .err{color:#c0556f;font-size:.74rem;margin-top:.35rem;min-height:1em}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.co__section{margin-bottom:1.8rem}
+.co__section>h2{font-family:var(--display);font-weight:500;font-size:1.3rem;margin-bottom:1rem}
+
+/* Métodos de pago */
+.pays-opt{display:grid;gap:10px}
+.pay-opt{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--sand);border-radius:var(--r);
+  padding:1em 1.1em;cursor:pointer;transition:border-color .2s,background .2s}
+.pay-opt:hover{border-color:var(--mauve)}
+.pay-opt input{margin-top:3px;accent-color:var(--mauve-deep)}
+.pay-opt.sel{border-color:var(--mauve-deep);background:var(--mauve-soft)}
+.pay-opt b{font-size:.92rem;font-weight:600}
+.pay-opt span{display:block;font-size:.8rem;color:var(--on-light-soft);margin-top:2px}
+.pay-detail{font-size:.85rem;color:var(--on-light-soft);background:var(--bone);border-radius:var(--r);
+  padding:1em 1.1em;margin-top:.4rem;line-height:1.7}
+.pay-detail b{color:var(--on-light)}
+
+/* Resumen del pedido */
+.co__summary{position:sticky;top:90px;background:var(--bone);border-radius:var(--r);
+  padding:clamp(20px,2.5vw,28px)}
+.co__summary h2{font-family:var(--display);font-weight:500;font-size:1.4rem;margin-bottom:1.1rem}
+.co-line{display:grid;grid-template-columns:54px 1fr auto;gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--sand)}
+.co-line__img{aspect-ratio:3/4;border-radius:var(--r);overflow:hidden;background:var(--paper)}
+.co-line__img img{width:100%;height:100%;object-fit:cover}
+.co-line__name{font-weight:600;font-size:.88rem}
+.co-line__meta{font-size:.76rem;color:var(--on-light-soft);margin-top:2px}
+.co-line__price{font-family:var(--display);font-size:.95rem;white-space:nowrap}
+.co-line .qty{margin-top:6px}
+.co-totals{margin-top:1.1rem;font-size:.9rem}
+.co-totals .row{display:flex;justify-content:space-between;padding:.35em 0;color:var(--on-light-soft)}
+.co-totals .row b{color:var(--on-light)}
+.co-totals .grand{display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:.6rem;padding-top:.8rem;border-top:1px solid var(--sand)}
+.co-totals .grand span{font-size:.85rem;letter-spacing:.04em;color:var(--on-light-soft)}
+.co-totals .grand b{font-family:var(--display);font-size:1.6rem;font-weight:500}
+.co__submit{width:100%;justify-content:center;margin-top:1.2rem}
+.co__note{font-size:.76rem;color:var(--on-light-soft);text-align:center;margin-top:.8rem;line-height:1.6}
+.co-empty{text-align:center;color:var(--on-light-soft);padding:48px 0}
+.co-empty a{color:var(--mauve-deep);font-weight:600}
+
+@media(max-width:860px){
+  .co{grid-template-columns:1fr}
+  .co__summary{position:static;order:-1}
+}
+@media(max-width:560px){
+  .field-row{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   CONFIRMACIÓN DE PEDIDO
+   ============================================================ */
+.ok{max-width:640px;margin-inline:auto;text-align:center;padding-block:clamp(36px,6vw,72px)}
+.ok__mark{width:72px;height:72px;border-radius:var(--r-pill);background:var(--mauve-soft);
+  display:grid;place-items:center;margin:0 auto 1.4rem}
+.ok__mark svg{width:34px;height:34px;stroke:var(--mauve-deep);stroke-width:2;fill:none}
+.ok h1{font-family:var(--display);font-weight:500;font-size:clamp(2rem,4vw,2.8rem);line-height:1.06;margin-bottom:.6rem}
+.ok p{color:var(--on-light-soft);max-width:48ch;margin:0 auto .4rem}
+.ok__code{display:inline-block;font-family:var(--display);font-size:1.2rem;letter-spacing:.06em;
+  background:var(--ink);color:var(--on-dark);padding:.5em 1.1em;border-radius:var(--r);margin:1.2rem 0}
+.ok__box{text-align:left;background:var(--bone);border-radius:var(--r);padding:clamp(18px,2.5vw,26px);
+  margin-top:1.4rem}
+.ok__box h3{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mauve-deep);
+  font-weight:600;margin-bottom:.8rem}
+.ok__box .row{display:flex;justify-content:space-between;padding:.3em 0;font-size:.9rem;color:var(--on-light-soft)}
+.ok__box .row b{color:var(--on-light)}
+.ok__actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:1.6rem}
+.ok__pay{font-size:.88rem;color:var(--on-light-soft);background:var(--mauve-soft);border-radius:var(--r);
+  padding:1em 1.2em;margin-top:1rem;line-height:1.8}
+.ok__pay b{color:var(--ink)}

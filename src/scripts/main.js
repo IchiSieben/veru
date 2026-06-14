@@ -7,14 +7,23 @@ import { initLookbook } from './lookbook.js';
 import { initCountdown } from './countdown.js';
 import { initNewsletter } from './newsletter.js';
 import { initPDP } from './pdp.js';
+import { initCheckout } from './checkout.js';
+import { initConfirm } from './confirm.js';
 import { renderCart } from './cart.js';
 import { renderFavs } from './favs.js';
-import { updateBadges } from './store.js';
+import { load, updateBadges, CART_KEY, FAVS_KEY } from './store.js';
 
 // onerror inline de la grilla/carrito usa fb() en scope global (igual al original).
 window.fb = fb;
 
+function refresh() {
+  renderCart();
+  renderFavs();
+  updateBadges();
+}
+
 function boot() {
+  load(); // hidratar carrito/favoritos desde localStorage
   initUI();
   initCatalog();
   initQuickview();
@@ -22,9 +31,17 @@ function boot() {
   initCountdown();
   initNewsletter();
   initPDP();
-  renderCart();
-  renderFavs();
-  updateBadges();
+  initCheckout();
+  initConfirm();
+  refresh();
+
+  // Sincronizar entre pestañas.
+  window.addEventListener('storage', (e) => {
+    if (e.key === CART_KEY || e.key === FAVS_KEY) {
+      load();
+      refresh();
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

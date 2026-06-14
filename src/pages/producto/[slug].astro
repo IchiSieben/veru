@@ -5,6 +5,7 @@ import ProductCard from '../../components/ProductCard.astro';
 import { products, related as relatedFn } from '../../lib/products.js';
 import { img } from '../../lib/images.js';
 import { money, discountPct } from '../../lib/format.js';
+import { waLink } from '../../config.js';
 
 export async function getStaticPaths() {
   return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
@@ -31,8 +32,7 @@ const description = p.desc;
 const ogUrl = new URL(ogImg.src, Astro.site).href;
 const canonical = new URL(`/producto/${p.slug}`, Astro.site).href;
 
-const waMsg = encodeURIComponent(`Hola VERÚ ✨ Me interesa la prenda "${p.name}" (${money(p.price)}). ¿Está disponible?`);
-const waHref = `https://wa.me/51999999999?text=${waMsg}`;
+const waHref = waLink(`Hola VERÚ ✨ Me interesa la prenda "${p.name}" (${money(p.price)}). ¿Está disponible?`);
 
 const jsonLd = {
   '@context': 'https://schema.org',

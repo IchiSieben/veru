@@ -1,0 +1,123 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config.js';
+---
+<Base title="Checkout — VERÚ" description="Finaliza tu compra en VERÚ." onDark={false}>
+  <Fragment slot="head"><meta name="robots" content="noindex" /></Fragment>
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Migas de pan">
+      <a href="/">Inicio</a><i>/</i><span>Checkout</span>
+    </nav>
+  </div>
+
+  <!-- Estado: carrito vacío -->
+  <section class="wrap co-empty" id="coEmpty" style="display:none">
+    <p>Tu carrito está vacío.</p>
+    <p><a href="/#prendas">Ver la colección →</a></p>
+  </section>
+
+  <form class="wrap co" id="coForm" novalidate>
+    <div class="co__main">
+      <div class="co__head">
+        <h1>Finalizar compra</h1>
+        <p>Confirmas tu pedido por WhatsApp y pagas con Yape, Plin o transferencia. Te respondemos al toque.</p>
+      </div>
+
+      <div class="co__section">
+        <h2>Tus datos</h2>
+        <div class="field" data-req>
+          <label for="co-name">Nombre completo</label>
+          <input id="co-name" name="name" autocomplete="name" />
+          <div class="err"></div>
+        </div>
+        <div class="field-row">
+          <div class="field" data-req>
+            <label for="co-phone">Teléfono / WhatsApp</label>
+            <input id="co-phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="9XX XXX XXX" />
+            <div class="err"></div>
+          </div>
+          <div class="field">
+            <label for="co-email">Correo (opcional)</label>
+            <input id="co-email" name="email" type="email" autocomplete="email" placeholder="tu@correo.com" />
+            <div class="err"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="co__section">
+        <h2>Entrega</h2>
+        <div class="field-row">
+          <div class="field" data-req>
+            <label for="co-district">Distrito / Ciudad</label>
+            <input id="co-district" name="district" autocomplete="address-level2" placeholder="Ej. Miraflores" />
+            <div class="err"></div>
+          </div>
+          <div class="field">
+            <label for="co-dep">Departamento</label>
+            <input id="co-dep" name="dep" value="Lima" autocomplete="address-level1" />
+            <div class="err"></div>
+          </div>
+        </div>
+        <div class="field" data-req>
+          <label for="co-address">Dirección</label>
+          <input id="co-address" name="address" autocomplete="street-address" placeholder="Calle, número, dpto." />
+          <div class="err"></div>
+        </div>
+        <div class="field">
+          <label for="co-ref">Referencia (opcional)</label>
+          <input id="co-ref" name="ref" placeholder="Cerca de…" />
+        </div>
+      </div>
+
+      <div class="co__section">
+        <h2>Pago</h2>
+        <div class="pays-opt" id="coPays">
+          <label class="pay-opt sel">
+            <input type="radio" name="pay" value="Yape" checked />
+            <span><b>Yape</b><span>Transferencia instantánea desde tu app.</span></span>
+          </label>
+          <label class="pay-opt">
+            <input type="radio" name="pay" value="Plin" />
+            <span><b>Plin</b><span>Transferencia instantánea desde tu app.</span></span>
+          </label>
+          <label class="pay-opt">
+            <input type="radio" name="pay" value="Transferencia" />
+            <span><b>Transferencia bancaria</b><span>BCP / Interbank.</span></span>
+          </label>
+          <label class="pay-opt">
+            <input type="radio" name="pay" value="Contra entrega" />
+            <span><b>Pago contra entrega</b><span>Solo Lima Metropolitana.</span></span>
+          </label>
+        </div>
+
+        <div class="pay-detail" data-pay="Yape">Yapea a <b>{SITE.yape.number}</b> ({SITE.yape.name}) y envíanos la captura por WhatsApp al confirmar.</div>
+        <div class="pay-detail" data-pay="Plin" style="display:none">Plinea a <b>{SITE.plin.number}</b> ({SITE.plin.name}) y envíanos la captura por WhatsApp al confirmar.</div>
+        <div class="pay-detail" data-pay="Transferencia" style="display:none">
+          <b>{SITE.bank.name}</b> · Cuenta <b>{SITE.bank.account}</b> · CCI <b>{SITE.bank.cci}</b> · Titular <b>{SITE.bank.holder}</b>. Envía el voucher por WhatsApp al confirmar.
+        </div>
+        <div class="pay-detail" data-pay="Contra entrega" style="display:none">Pagas en efectivo o Yape al recibir tu pedido (solo Lima Metropolitana).</div>
+      </div>
+
+      <div class="field">
+        <label for="co-notes">Notas del pedido (opcional)</label>
+        <textarea id="co-notes" name="notes" placeholder="Tallas alternativas, indicaciones de entrega…"></textarea>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <aside class="co__summary">
+      <h2>Tu pedido</h2>
+      <div id="coLines"></div>
+      <div class="co-totals">
+        <div class="row"><span>Subtotal</span><b id="coSubtotal">S/0</b></div>
+        <div class="row"><span id="coShipLabel">Envío</span><b id="coShip">—</b></div>
+        <div class="grand"><span>Total</span><b id="coTotal">S/0</b></div>
+      </div>
+      <button type="submit" class="btn btn--mauve co__submit" id="coSubmit">
+        Confirmar pedido por WhatsApp <span class="arr">→</span>
+      </button>
+      <p class="co__note">Al confirmar se abre WhatsApp con el detalle de tu pedido. El stock se reserva al recibir tu pago.</p>
+    </aside>
+  </form>
+</Base>

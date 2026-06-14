@@ -1,12 +1,13 @@
 // Favoritos: toggle + render del drawer.
 import { byId, money, $ } from './data.js';
-import { state, updateBadges, bump } from './store.js';
+import { state, updateBadges, bump, persist } from './store.js';
 import { addToCart } from './cart.js';
 
 export function toggleFav(id) {
   state.favs.includes(id)
     ? (state.favs = state.favs.filter((f) => f !== id))
     : (state.favs.push(id), bump('#favBadge'));
+  persist();
   document
     .querySelectorAll(`[data-fav="${id}"]`)
     .forEach((b) => b.classList.toggle('on', state.favs.includes(id)));

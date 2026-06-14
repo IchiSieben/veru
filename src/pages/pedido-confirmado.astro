@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Pedido confirmado — VERÚ" description="Tu pedido VERÚ fue registrado." onDark={false}>
+  <Fragment slot="head"><meta name="robots" content="noindex" /></Fragment>
+
+  <section class="wrap ok" id="okRoot">
+    <div class="ok__mark">
+      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h1>¡Gracias por tu pedido!</h1>
+    <p id="okIntro">Te abrimos WhatsApp con el detalle de tu compra.</p>
+    <div class="ok__code" id="okCode">—</div>
+    <div class="ok__box" id="okBox"></div>
+    <div class="ok__pay" id="okPay"></div>
+    <div class="ok__actions">
+      <a class="btn btn--mauve" id="okWa" target="_blank" rel="noopener">Reenviar por WhatsApp <span class="arr">→</span></a>
+      <a class="btn btn--ghost" href="/#prendas">Seguir comprando</a>
+    </div>
+  </section>
+</Base>
