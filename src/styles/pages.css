@@ -1,0 +1,88 @@
+/* ============================================================
+   ADICIONES (Fase 1.5+): header sin hero, ficha de producto.
+   Mismos tokens y geometría del sistema. No altera la home.
+   ============================================================ */
+
+/* Header en páginas sin hero (PDP, checkout): se ve sólido desde el inicio. */
+.header.no-hero{
+  background:rgba(251,249,246,.95);
+  backdrop-filter:saturate(140%) blur(14px);
+  box-shadow:0 1px 0 rgba(35,26,34,.08);
+  color:var(--on-light);
+}
+.header.no-hero::before{opacity:0}
+
+/* ---------- Breadcrumb ---------- */
+.crumbs{display:flex;align-items:center;gap:.5em;flex-wrap:wrap;
+  font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--on-light-soft);
+  padding-top:clamp(18px,4vw,30px)}
+.crumbs a{transition:color .2s}
+.crumbs a:hover{color:var(--mauve-deep)}
+.crumbs span{color:var(--on-light)}
+.crumbs i{opacity:.5;font-style:normal}
+
+/* ---------- Ficha de producto ---------- */
+.pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4.5vw,64px);
+  align-items:start;padding-block:clamp(24px,4vw,48px)}
+
+/* Galería */
+.pdp__gallery{position:sticky;top:96px}
+.pdp__main{position:relative;aspect-ratio:3/4;overflow:hidden;border-radius:var(--r);
+  background:var(--bone);cursor:zoom-in}
+.pdp__main img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease-out)}
+.pdp__main:hover img{transform:scale(1.05)}
+.pdp__zoomhint{position:absolute;left:14px;top:14px;z-index:2;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#fff;background:rgba(23,18,27,.55);padding:.45em .8em;border-radius:var(--r);
+  backdrop-filter:blur(6px)}
+.pdp__thumbs{display:flex;gap:10px;margin-top:10px}
+.pdp__thumb{flex:0 0 80px;aspect-ratio:3/4;overflow:hidden;border-radius:var(--r);background:var(--bone);
+  border:1px solid transparent;transition:border-color .25s;cursor:pointer}
+.pdp__thumb.active{border-color:var(--mauve-deep)}
+.pdp__thumb img{width:100%;height:100%;object-fit:cover}
+
+/* Info */
+.pdp__cat{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mauve-deep);font-weight:600}
+.pdp__name{font-family:var(--display);font-weight:500;font-size:clamp(2rem,4vw,3rem);line-height:1.05;
+  letter-spacing:-.01em;margin:.5rem 0 .4rem}
+.pdp__price{font-family:var(--display);font-size:1.7rem;display:flex;align-items:baseline;gap:.5em;margin-bottom:.3rem}
+.pdp__price s{font-family:var(--ui);font-size:1rem;color:var(--on-light-soft)}
+.pdp__save{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:var(--mauve-deep);padding:.3em .6em;border-radius:var(--r)}
+.pdp__desc{color:var(--on-light-soft);font-size:.98rem;margin:1rem 0 1.6rem;max-width:46ch}
+.pdp__block{margin-bottom:1.4rem}
+.pdp__sizes{display:flex;gap:8px;flex-wrap:wrap}
+.pdp__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:.4rem}
+.pdp__actions .btn{flex:1;justify-content:center;min-width:180px}
+.pdp__wa{display:inline-flex;align-items:center;justify-content:center;gap:.6em;flex:none;
+  border:1px solid var(--sand);border-radius:var(--r);padding:.95em 1.4em;
+  font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;transition:all .25s}
+.pdp__wa:hover{border-color:#25D366;color:#25D366}
+.pdp__wa svg{width:18px;height:18px;fill:currentColor}
+.pdp__ship{display:flex;align-items:center;gap:.6em;font-size:.82rem;color:var(--on-light-soft);
+  margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--sand)}
+.pdp__ship svg{width:20px;height:20px;stroke:var(--mauve-deep);stroke-width:1.6;fill:none;flex:none}
+
+/* Selector de color (reusa .swatches/.sw pero un poco más grande) */
+.pdp .swatches .sw{width:20px;height:20px}
+
+/* Acordeón de detalles */
+.acc{border-top:1px solid var(--sand);margin-top:1.6rem}
+.acc__item{border-bottom:1px solid var(--sand)}
+.acc__head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:1.05em 0;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:left}
+.acc__head .ic{transition:transform .3s var(--ease);font-size:1.2rem;line-height:1;color:var(--mauve-deep)}
+.acc__item.open .acc__head .ic{transform:rotate(45deg)}
+.acc__body{max-height:0;overflow:hidden;transition:max-height .4s var(--ease)}
+.acc__body p{color:var(--on-light-soft);font-size:.9rem;padding-bottom:1.1em;max-width:52ch}
+
+/* Relacionados: reusa .grid/.card. La tarjeta-enlace hereda los estilos existentes. */
+.rel-card{display:block}
+
+@media(max-width:860px){
+  .pdp{grid-template-columns:1fr;gap:24px}
+  .pdp__gallery{position:static}
+}
+@media(max-width:560px){
+  .pdp__actions{flex-direction:column}
+  .pdp__actions .btn,.pdp__wa{min-width:0;width:100%}
+}

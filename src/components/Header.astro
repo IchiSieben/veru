@@ -4,7 +4,7 @@ import BrandMark from './BrandMark.astro';
 interface Props { onDark?: boolean; }
 const { onDark = true } = Astro.props;
 ---
-<header class={`header${onDark ? ' on-dark' : ''}`} id="header">
+<header class={`header${onDark ? ' on-dark' : ' no-hero'}`} id="header">
   <nav class="nav wrap">
     <div class="nav__left">
       <button class="iconbtn burger" id="burger" aria-label="Abrir menú">

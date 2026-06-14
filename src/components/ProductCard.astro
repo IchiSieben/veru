@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { money, discountPct } from '../lib/format.js';
+
+interface Props { product: any; }
+const { product: p } = Astro.props;
+const pct = discountPct(p.price, p.old);
+---
+<a class="card rel-card" href={`/producto/${p.slug}`} aria-label={p.name}>
+  <div class="card__frame">
+    <div class="card__tags">
+      {p.badge === 'sale' && <span class="tag tag--sale">−{pct}%</span>}
+      {p.badge === 'new' && <span class="tag tag--new">Nuevo</span>}
+    </div>
+    <Image class="card__img card__img--main" src={img(p.img[0])} alt={p.name} widths={[300, 500, 700]} sizes="(max-width:560px) 50vw, 25vw" loading="lazy" />
+    <Image class="card__img card__img--alt" src={img(p.img[1])} alt="" widths={[300, 500, 700]} sizes="(max-width:560px) 50vw, 25vw" loading="lazy" />
+  </div>
+  <div class="card__body">
+    <div class="card__row">
+      <span class="card__name">{p.name}</span>
+      <span class="card__price">{p.old ? <s>{money(p.old)}</s> : null}{money(p.price)}</span>
+    </div>
+    <div class="card__cat">{p.cat}</div>
+    <div class="swatches">
+      {p.colors.map((c, i) => <span class={`sw${i === 0 ? ' active' : ''}`} style={`background:${c}`} title="color"></span>)}
+    </div>
+  </div>
+</a>

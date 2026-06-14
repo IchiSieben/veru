@@ -1,0 +1,165 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products, related as relatedFn } from '../../lib/products.js';
+import { img } from '../../lib/images.js';
+import { money, discountPct } from '../../lib/format.js';
+
+export async function getStaticPaths() {
+  return products.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product: p } = Astro.props;
+const pct = discountPct(p.price, p.old);
+const related = relatedFn(p.slug, 4);
+const defaultSize = p.sizes[1] || p.sizes[0];
+
+// Imágenes de galería + OG, optimizadas en build.
+const [mainImg, altImg, ogImg] = await Promise.all([
+  getImage({ src: img(p.img[0]), width: 900 }),
+  getImage({ src: img(p.img[1]), width: 900 }),
+  getImage({ src: img(p.img[0]), width: 1200 }),
+]);
+const gallery = [
+  { src: mainImg.src, alt: p.name },
+  { src: altImg.src, alt: `${p.name} — detalle` },
+];
+
+const title = `${p.name} — VERÚ`;
+const description = p.desc;
+const ogUrl = new URL(ogImg.src, Astro.site).href;
+const canonical = new URL(`/producto/${p.slug}`, Astro.site).href;
+
+const waMsg = encodeURIComponent(`Hola VERÚ ✨ Me interesa la prenda "${p.name}" (${money(p.price)}). ¿Está disponible?`);
+const waHref = `https://wa.me/51999999999?text=${waMsg}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.name,
+  description: p.desc,
+  image: ogUrl,
+  category: p.cat,
+  brand: { '@type': 'Brand', name: 'VERÚ' },
+  offers: {
+    '@type': 'Offer',
+    price: p.price,
+    priceCurrency: 'PEN',
+    availability: 'https://schema.org/InStock',
+    url: canonical,
+  },
+};
+---
+<Base title={title} description={description} onDark={false}>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="product:price:amount" content={String(p.price)} />
+    <meta property="product:price:currency" content="PEN" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Migas de pan">
+      <a href="/">Inicio</a><i>/</i>
+      <a href="/#prendas">{p.cat}</a><i>/</i>
+      <span>{p.name}</span>
+    </nav>
+  </div>
+
+  <section class="wrap pdp" data-id={p.id}>
+    <!-- Galería -->
+    <div class="pdp__gallery">
+      <div class="pdp__main" id="pdpMain" role="button" tabindex="0" aria-label="Ampliar imagen">
+        <span class="pdp__zoomhint">Click para ampliar</span>
+        <img id="pdpMainImg" src={gallery[0].src} alt={gallery[0].alt} />
+      </div>
+      <div class="pdp__thumbs">
+        {gallery.map((g, i) => (
+          <button class={`pdp__thumb${i === 0 ? ' active' : ''}`} data-full={g.src} aria-label={`Vista ${i + 1}`}>
+            <img src={g.src} alt={g.alt} />
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="pdp__info">
+      <p class="pdp__cat">{p.cat}</p>
+      <h1 class="pdp__name">{p.name}</h1>
+      <div class="pdp__price">
+        {p.old ? <s>{money(p.old)}</s> : null}
+        <span>{money(p.price)}</span>
+        {pct ? <span class="pdp__save">−{pct}%</span> : null}
+      </div>
+      <p class="pdp__desc">{p.desc}</p>
+
+      <div class="pdp__block">
+        <p class="opt-label">Color</p>
+        <div class="swatches" id="pdpSw">
+          {p.colors.map((c, i) => (
+            <span class={`sw${i === 0 ? ' active' : ''}`} style={`background:${c}`} title="color"></span>
+          ))}
+        </div>
+      </div>
+
+      <div class="pdp__block">
+        <p class="opt-label">Talla</p>
+        <div class="sizes pdp__sizes" id="pdpSizes">
+          {p.sizes.map((s) => (
+            <button class={`size${s === defaultSize ? ' active' : ''}`} data-s={s}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="pdp__actions">
+        <button class="btn btn--solid" id="pdpAdd" data-id={p.id} data-size={defaultSize}>Agregar al carrito</button>
+        <a class="pdp__wa" href={waHref} target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M16 3C9 3 3.5 8.5 3.5 15.5c0 2.4.7 4.7 1.9 6.7L3 29l7-1.8c1.9 1 4 1.6 6.1 1.6 7 0 12.5-5.5 12.5-12.5S23 3 16 3zm0 22.7c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-4.1 1.1 1.1-4-.3-.4a10 10 0 01-1.6-5.5C5.5 9.9 10.2 5.3 16 5.3s10.5 4.6 10.5 10.2S21.8 25.7 16 25.7z"/></svg>
+          Consultar
+        </a>
+      </div>
+
+      <div class="pdp__ship">
+        <svg viewBox="0 0 24 24"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z"/><circle cx="7" cy="17" r="1.6"/><circle cx="17" cy="17" r="1.6"/></svg>
+        <span>Envío gratis desde S/199 · Cambios sin costo en 30 días · Hecho en Lima.</span>
+      </div>
+
+      <!-- Detalles -->
+      <div class="acc" id="pdpAcc">
+        <div class="acc__item open">
+          <button class="acc__head" type="button">Composición <span class="ic">+</span></button>
+          <div class="acc__body"><p>100% algodón pima peruano. Hebra larga de la costa norte: suave, resistente y con caída. Confeccionado en talleres limeños en tiradas cortas.</p></div>
+        </div>
+        <div class="acc__item">
+          <button class="acc__head" type="button">Cuidado <span class="ic">+</span></button>
+          <div class="acc__body"><p>Lavar a mano o ciclo delicado en frío, del revés. No usar lejía. Secar a la sombra sin escurrir. Planchar a temperatura media. Así te dura años.</p></div>
+        </div>
+        <div class="acc__item">
+          <button class="acc__head" type="button">Envíos y cambios <span class="ic">+</span></button>
+          <div class="acc__body"><p>Envíos a todo el Perú. Lima 24–48 h, provincias 2–5 días. Envío gratis desde S/199. Cambios y devoluciones sin costo durante 30 días.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="section wrap">
+      <div class="sec-head r-up">
+        <div>
+          <p class="eyebrow" style="margin-bottom:.8rem">También te puede gustar</p>
+          <h2>Para seguir <span class="it">mirando</span></h2>
+        </div>
+      </div>
+      <div class="grid r-stag">
+        {related.map((rp) => <ProductCard product={rp} />)}
+      </div>
+    </section>
+  )}
+</Base>

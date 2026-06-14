@@ -3,3 +3,4 @@
    2) reset/base/botones/componentes/responsive/reduced-motion */
 @import './tokens.css';
 @import './app.css';
+@import './pages.css';

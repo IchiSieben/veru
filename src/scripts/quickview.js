@@ -25,6 +25,8 @@ export function openQuick(id) {
   $('#modalName').textContent = p.name;
   $('#modalPrice').innerHTML = (p.old ? `<s>${money(p.old)}</s>` : '') + money(p.price);
   $('#modalDesc').textContent = p.desc;
+  const detail = $('#modalDetail');
+  if (detail) detail.href = `/producto/${p.slug}`;
   $('#modalSw').innerHTML = p.colors
     .map((c, i) => `<span class="sw${i === 0 ? ' active' : ''}" style="background:${c}"></span>`)
     .join('');

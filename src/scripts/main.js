@@ -6,6 +6,7 @@ import { initQuickview } from './quickview.js';
 import { initLookbook } from './lookbook.js';
 import { initCountdown } from './countdown.js';
 import { initNewsletter } from './newsletter.js';
+import { initPDP } from './pdp.js';
 import { renderCart } from './cart.js';
 import { renderFavs } from './favs.js';
 import { updateBadges } from './store.js';
@@ -20,6 +21,7 @@ function boot() {
   initLookbook();
   initCountdown();
   initNewsletter();
+  initPDP();
   renderCart();
   renderFavs();
   updateBadges();
