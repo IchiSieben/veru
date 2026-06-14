@@ -1,0 +1,41 @@
+---
+import BrandMark from './BrandMark.astro';
+// Clase on-dark inicial sólo cuando hay hero detrás (home). El script ui.js la gestiona en scroll.
+interface Props { onDark?: boolean; }
+const { onDark = true } = Astro.props;
+---
+<header class={`header${onDark ? ' on-dark' : ''}`} id="header">
+  <nav class="nav wrap">
+    <div class="nav__left">
+      <button class="iconbtn burger" id="burger" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <ul class="nav__menu">
+        <li><a href="/#nuevo">Nuevo</a></li>
+        <li><a href="/#prendas">Prendas</a></li>
+        <li><a href="/#lookbook">Lookbook</a></li>
+        <li><a href="/#ofertas">Ofertas</a></li>
+        <li><a href="/#marca">Nosotras</a></li>
+      </ul>
+    </div>
+
+    <a href="/" class="brand" aria-label="VERÚ inicio">
+      <BrandMark center="var(--paper)" />
+      <span class="brand__word">Verú</span>
+    </a>
+
+    <div class="nav__right">
+      <button class="iconbtn" aria-label="Buscar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <button class="iconbtn" id="favBtn" aria-label="Favoritos">
+        <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.4C.5 8.2 2 4.5 5.5 4.5 8 4.5 9.6 6 12 8.7 14.4 6 16 4.5 18.5 4.5 22 4.5 23.5 8.2 22 11.6 19.5 16.4 12 21 12 21z"/></svg>
+        <i class="badge" id="favBadge">0</i>
+      </button>
+      <button class="iconbtn" id="cartBtn" aria-label="Carrito">
+        <svg viewBox="0 0 24 24"><path d="M6 2l-2 5h16l-2-5"/><path d="M4 7v13a1 1 0 001 1h14a1 1 0 001-1V7"/><path d="M9 11a3 3 0 006 0"/></svg>
+        <i class="badge" id="cartBadge">0</i>
+      </button>
+    </div>
+  </nav>
+</header>

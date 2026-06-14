@@ -1,0 +1,32 @@
+---
+import { chipCategories } from '../lib/products.js';
+---
+<section class="section wrap" id="prendas">
+  <div class="sec-head r-up">
+    <div>
+      <p class="eyebrow" style="margin-bottom:.8rem">La colección</p>
+      <h2>Prendas de <span class="it">temporada</span></h2>
+    </div>
+    <p style="max-width:30ch">Piezas pensadas para el día a día limeño: capas ligeras, tejidos cálidos y básicos que no fallan.</p>
+  </div>
+
+  <div class="filters r-up">
+    <div class="chips" id="chips">
+      {chipCategories.map((c) => (
+        <button class={`chip${c === 'Todos' ? ' active' : ''}`} data-c={c}>{c}</button>
+      ))}
+    </div>
+    <div class="sortwrap">
+      <span>Ordenar</span>
+      <select id="sort" aria-label="Ordenar productos">
+        <option value="rel">Relevancia</option>
+        <option value="new">Novedades</option>
+        <option value="low">Precio: menor a mayor</option>
+        <option value="high">Precio: mayor a menor</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <div class="loadmore"><button class="btn btn--ghost" id="loadMore">Cargar más <span class="arr">↓</span></button></div>
+</section>

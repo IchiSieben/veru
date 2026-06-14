@@ -1,0 +1,16 @@
+---
+// Mark VERÚ: 5 elipses giradas (flor/movimiento). El centro cambia según el fondo.
+interface Props { center?: string; class?: string; }
+const { center = 'var(--paper)', class: cls = 'brand__mark' } = Astro.props;
+---
+<svg class={cls} viewBox="0 0 32 32" aria-hidden="true">
+  <g fill="var(--mauve)">
+    <ellipse cx="16" cy="16" rx="4.4" ry="9" transform="rotate(0 16 16)"/>
+    <ellipse cx="16" cy="16" rx="4.4" ry="9" transform="rotate(72 16 16)"/>
+    <ellipse cx="16" cy="16" rx="4.4" ry="9" transform="rotate(144 16 16)"/>
+    <ellipse cx="16" cy="16" rx="4.4" ry="9" transform="rotate(216 16 16)"/>
+    <ellipse cx="16" cy="16" rx="4.4" ry="9" transform="rotate(288 16 16)"/>
+  </g>
+  <circle cx="16" cy="16" r="3.4" fill={center}/>
+  <circle cx="16" cy="16" r="1.6" fill="var(--mauve-deep)"/>
+</svg>

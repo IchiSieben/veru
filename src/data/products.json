@@ -1,0 +1,142 @@
+{
+  "media": {
+    "hero": "1490481651871-ab68de25d43d.jpg",
+    "manifesto": "1556905055-8f358a7a47b2.jpg",
+    "drop": "1483985988355-763728e1935b.jpg"
+  },
+  "categories": [
+    { "name": "Vestidos", "img": "1572804013309-59a88b7e92f1.jpg" },
+    { "name": "Tejidos", "img": "1576566588028-4147f3842f27.jpg" },
+    { "name": "Abrigos", "img": "1539533018447-63fcce2678e3.jpg" },
+    { "name": "Pantalones", "img": "1594633312681-425c7b97ccd1.jpg" }
+  ],
+  "lookbook": [
+    { "img": "1485462537746-965f33f7f6a7.jpg", "t": "El uniforme", "s": "Look 01" },
+    { "img": "1496747611176-843222e1e57c.jpg", "t": "Capas suaves", "s": "Look 02" },
+    { "img": "1515886657613-9f3515b0c78f.jpg", "t": "Noche en Barranco", "s": "Look 03" },
+    { "img": "1483985988355-763728e1935b.jpg", "t": "Domingo lento", "s": "Look 04" },
+    { "img": "1539008835657-9e8e9680c956.jpg", "t": "Tonos tierra", "s": "Look 05" }
+  ],
+  "instagram": [
+    "1485462537746-965f33f7f6a7.jpg",
+    "1539533018447-63fcce2678e3.jpg",
+    "1576566588028-4147f3842f27.jpg",
+    "1572804013309-59a88b7e92f1.jpg",
+    "1515886657613-9f3515b0c78f.jpg",
+    "1496747611176-843222e1e57c.jpg"
+  ],
+  "products": [
+    {
+      "id": 1, "slug": "vestido-lucuma", "name": "Vestido Lúcuma", "cat": "Vestidos",
+      "price": 189, "old": 0, "badge": "new",
+      "colors": ["#B4849F", "#36202F", "#E2D8CC"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1515372039744-b8f02a3ae446.jpg", "1539008835657-9e8e9680c956.jpg"],
+      "desc": "Vestido midi en pima ligero, corte fluido y manga francesa. Cae suave, ideal para media estación."
+    },
+    {
+      "id": 2, "slug": "abrigo-sillar", "name": "Abrigo Sillar", "cat": "Abrigos",
+      "price": 329, "old": 0, "badge": "new",
+      "colors": ["#E2D8CC", "#36202F"], "sizes": ["S", "M", "L"],
+      "img": ["1591047139829-d91aecb6caea.jpg", "1548624313-0396c75e4b1a.jpg"],
+      "desc": "Abrigo largo de paño con forro de algodón. Estructura limpia y abrigo real para las noches limeñas."
+    },
+    {
+      "id": 3, "slug": "chompa-telar", "name": "Chompa Telar", "cat": "Tejidos",
+      "price": 165, "old": 219, "badge": "sale",
+      "colors": ["#8B5A77", "#E2D8CC", "#17121B"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1576566588028-4147f3842f27.jpg", "1434389677669-e08b4cac3105.jpg"],
+      "desc": "Tejido grueso en punto trenzado, cuello redondo. Hilado noble que no pica."
+    },
+    {
+      "id": 4, "slug": "pantalon-cauce", "name": "Pantalón Cauce", "cat": "Pantalones",
+      "price": 175, "old": 0, "badge": "",
+      "colors": ["#17121B", "#E2D8CC"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1594633312681-425c7b97ccd1.jpg", "1551803091-e20673f15770.jpg"],
+      "desc": "Pantalón sastre de pierna recta y tiro alto. Pinzas que estilizan, caída impecable."
+    },
+    {
+      "id": 5, "slug": "blusa-neblina", "name": "Blusa Neblina", "cat": "Vestidos",
+      "price": 139, "old": 0, "badge": "new",
+      "colors": ["#EBDCE4", "#E2D8CC", "#B4849F"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1564257631407-4deb1f99d992.jpg", "1485968579580-b6d095142e6e.jpg"],
+      "desc": "Blusa de manga abullonada en pima sedoso. Romántica sin esfuerzo."
+    },
+    {
+      "id": 6, "slug": "cardigan-costa", "name": "Cárdigan Costa", "cat": "Tejidos",
+      "price": 198, "old": 0, "badge": "",
+      "colors": ["#E2D8CC", "#8B5A77"], "sizes": ["S", "M", "L"],
+      "img": ["1582142306909-195724d33ffc.jpg", "1515886657613-9f3515b0c78f.jpg"],
+      "desc": "Cárdigan abierto de punto medio con botones de coco. La capa que va con todo."
+    },
+    {
+      "id": 7, "slug": "vestido-garua", "name": "Vestido Garúa", "cat": "Vestidos",
+      "price": 215, "old": 269, "badge": "sale",
+      "colors": ["#36202F", "#B4849F"], "sizes": ["XS", "S", "M"],
+      "img": ["1572804013309-59a88b7e92f1.jpg", "1496747611176-843222e1e57c.jpg"],
+      "desc": "Vestido camisero en pima lavado, cinturón al tono. Elegancia de diario."
+    },
+    {
+      "id": 8, "slug": "trench-malecon", "name": "Trench Malecón", "cat": "Abrigos",
+      "price": 289, "old": 0, "badge": "new",
+      "colors": ["#E2D8CC", "#17121B"], "sizes": ["S", "M", "L"],
+      "img": ["1539533018447-63fcce2678e3.jpg", "1483985988355-763728e1935b.jpg"],
+      "desc": "Gabardina clásica con cinturón. Impermeable ligera para la garúa de Lima."
+    },
+    {
+      "id": 9, "slug": "polo-brisa", "name": "Polo Brisa", "cat": "Básicos",
+      "price": 79, "old": 0, "badge": "",
+      "colors": ["#EBDCE4", "#E2D8CC", "#17121B", "#B4849F"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1521572163474-6864f9cf17ab.jpg", "1503342217505-b0a15ec3261c.jpg"],
+      "desc": "Polo esencial de pima peso medio. El básico que vas a querer en cada color."
+    },
+    {
+      "id": 10, "slug": "falda-quebrada", "name": "Falda Quebrada", "cat": "Pantalones",
+      "price": 149, "old": 0, "badge": "",
+      "colors": ["#17121B", "#8B5A77"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1594223274512-ad4803739b7c.jpg", "1583496661160-fb5886a0aaaa.jpg"],
+      "desc": "Falda midi plisada con caída fluida. Movimiento en cada paso."
+    },
+    {
+      "id": 11, "slug": "sueter-andino", "name": "Suéter Andino", "cat": "Tejidos",
+      "price": 179, "old": 0, "badge": "new",
+      "colors": ["#B4849F", "#E2D8CC"], "sizes": ["S", "M", "L"],
+      "img": ["1611601322175-ef8ec8c85f01.jpg", "1434389677669-e08b4cac3105.jpg"],
+      "desc": "Suéter de cuello alto en punto fino. Abrigo discreto bajo cualquier abrigo."
+    },
+    {
+      "id": 12, "slug": "vestido-faro", "name": "Vestido Faro", "cat": "Vestidos",
+      "price": 235, "old": 0, "badge": "",
+      "colors": ["#36202F", "#B4849F", "#E2D8CC"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1469334031218-e382a71b716b.jpg", "1496747611176-843222e1e57c.jpg"],
+      "desc": "Vestido largo de tirantes con espalda descubierta. Para las noches que valen la pena."
+    },
+    {
+      "id": 13, "slug": "camisa-bruma", "name": "Camisa Bruma", "cat": "Básicos",
+      "price": 119, "old": 159, "badge": "sale",
+      "colors": ["#E2D8CC", "#EBDCE4", "#17121B"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1598554747436-c9293d6a588f.jpg", "1485968579580-b6d095142e6e.jpg"],
+      "desc": "Camisa oversize en pima estructurado. La que robas del clóset y ya no devuelves."
+    },
+    {
+      "id": 14, "slug": "pantalon-litoral", "name": "Pantalón Litoral", "cat": "Pantalones",
+      "price": 159, "old": 0, "badge": "",
+      "colors": ["#E2D8CC", "#8B5A77", "#17121B"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1509631179647-0177331693ae.jpg", "1551803091-e20673f15770.jpg"],
+      "desc": "Pantalón palazzo de lino-pima, fresco y con vuelo. Comodidad que se ve bien."
+    },
+    {
+      "id": 15, "slug": "chaleco-pampa", "name": "Chaleco Pampa", "cat": "Abrigos",
+      "price": 145, "old": 0, "badge": "new",
+      "colors": ["#36202F", "#E2D8CC"], "sizes": ["S", "M", "L"],
+      "img": ["1434389677669-e08b4cac3105.jpg", "1576566588028-4147f3842f27.jpg"],
+      "desc": "Chaleco acolchado ligero, perfecto para capas. La transición a otoño en una pieza."
+    },
+    {
+      "id": 16, "slug": "top-marea", "name": "Top Marea", "cat": "Básicos",
+      "price": 89, "old": 0, "badge": "",
+      "colors": ["#B4849F", "#17121B", "#EBDCE4"], "sizes": ["XS", "S", "M", "L"],
+      "img": ["1502716119720-b23a93e5fe1b.jpg", "1503342217505-b0a15ec3261c.jpg"],
+      "desc": "Top de tirante fino en pima rib. Base perfecta para todo lookbook."
+    }
+  ]
+}

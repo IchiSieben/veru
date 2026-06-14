@@ -1,0 +1,30 @@
+---
+// Vista rápida con zoom/pan. El contenido se llena por JS (quickview.js).
+---
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Vista rápida del producto">
+  <div class="overlay" id="modalOverlay" style="position:absolute"></div>
+  <div class="modal__panel">
+    <button class="modal__close" id="modalClose" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="modal__stage" id="modalStage">
+      <span class="modal__hint">Click para acercar</span>
+      <img class="modal__zoomimg" id="modalImg" alt="">
+      <div class="modal__zui">
+        <button class="zbtn" id="zoomOut" aria-label="Alejar"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+        <button class="zbtn" id="zoomIn" aria-label="Acercar"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    </div>
+    <div class="modal__info">
+      <span class="modal__cat" id="modalCat"></span>
+      <h3 class="modal__name" id="modalName"></h3>
+      <div class="modal__price" id="modalPrice"></div>
+      <p class="modal__desc" id="modalDesc"></p>
+      <p class="opt-label">Color</p>
+      <div class="swatches" id="modalSw" style="margin-bottom:1.3rem"></div>
+      <p class="opt-label">Talla</p>
+      <div class="sizes" id="modalSizes"></div>
+      <button class="btn btn--solid" id="modalAdd" style="width:100%;justify-content:center">Agregar al carrito</button>
+    </div>
+  </div>
+</div>

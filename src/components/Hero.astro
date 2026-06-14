@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { media } from '../lib/products.js';
+---
+<section class="hero" id="hero">
+  <div class="hero__media" id="heroMedia">
+    <Image
+      class="hero__img"
+      src={img(media.hero)}
+      alt="Editorial VERÚ otoño"
+      widths={[900, 1400, 1900]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="hero__scrim"></div>
+  <div class="hero__inner">
+    <p class="hero__eyebrow eyebrow fade-up">Colección Otoño · 2026</p>
+    <h1>
+      <span class="reveal-word"><span>El&nbsp;otoño</span></span>
+      <span class="reveal-word"><span>se&nbsp;teje</span></span>
+      <span class="reveal-word"><span class="it">acá.</span></span>
+    </h1>
+    <div class="hero__row fade-up">
+      <a href="/#prendas" class="btn btn--mauve">Ver la colección <span class="arr">→</span></a>
+      <p class="hero__note">Algodón pima peruano, en piezas de edición limitada diseñadas y confeccionadas en Lima.</p>
+    </div>
+  </div>
+  <div class="scrolldown"><span>Scroll</span><i></i></div>
+</section>

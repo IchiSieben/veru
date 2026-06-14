@@ -1,0 +1,77 @@
+---
+import { getImage } from 'astro:assets';
+import { products } from '../lib/products.js';
+import { img } from '../lib/images.js';
+import '../styles/global.css';
+
+import TopMarquee from '../components/TopMarquee.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import QuickViewModal from '../components/QuickViewModal.astro';
+import Drawers from '../components/Drawers.astro';
+import Floating from '../components/Floating.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  onDark?: boolean;
+}
+const {
+  title = 'VERÚ — Moda peruana en algodón pima',
+  description = 'VERÚ. Prendas de algodón pima diseñadas y confeccionadas en Lima. Edición limitada. Hecho en Perú.',
+  onDark = true,
+} = Astro.props;
+
+// Datos para el cliente (carrito, favoritos, vista rápida, grilla) con imágenes ya
+// optimizadas en build. Reemplazar las fotos en src/assets/img re-genera estos src.
+const clientProducts = await Promise.all(
+  products.map(async (p) => {
+    const [main, alt, thumb, zoom] = await Promise.all([
+      getImage({ src: img(p.img[0]), width: 700 }),
+      getImage({ src: img(p.img[1]), width: 700 }),
+      getImage({ src: img(p.img[0]), width: 200 }),
+      getImage({ src: img(p.img[0]), width: 1000 }),
+    ]);
+    return {
+      id: p.id, slug: p.slug, name: p.name, cat: p.cat,
+      price: p.price, old: p.old, badge: p.badge,
+      colors: p.colors, sizes: p.sizes, desc: p.desc,
+      imgs: [main.src, alt.src], thumb: thumb.src, zoom: zoom.src,
+    };
+  })
+);
+const dataJSON = JSON.stringify(clientProducts);
+---
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+
+  <!-- Fuentes: Bodoni Moda (display/logo) + Manrope (UI/cuerpo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <slot name="head" />
+</head>
+<body>
+  <TopMarquee />
+  <Header onDark={onDark} />
+
+  <slot />
+
+  <Footer />
+  <QuickViewModal />
+  <Drawers />
+  <Floating />
+
+  <script type="application/json" id="veru-data" set:html={dataJSON}></script>
+  <script>
+    import '../scripts/main.js';
+  </script>
+</body>
+</html>

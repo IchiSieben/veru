@@ -1,0 +1,5 @@
+/* Hoja global VERÚ — orden idéntico al sitio original:
+   1) tokens (paleta malva, tipografía, medidas)
+   2) reset/base/botones/componentes/responsive/reduced-motion */
+@import './tokens.css';
+@import './app.css';

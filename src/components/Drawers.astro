@@ -1,0 +1,42 @@
+---
+// Overlay + drawers (menú móvil, favoritos, carrito). El contenido dinámico lo llena el JS.
+---
+<div class="overlay" id="overlay"></div>
+
+<!-- menú móvil -->
+<aside class="drawer drawer--left" id="menuDrawer" aria-label="Menú">
+  <div class="drawer__head">
+    <h3>Menú</h3>
+    <button class="drawer__close" data-close aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer__body">
+    <a href="/#nuevo" class="mlink" data-close style="display:block;font-family:var(--display);font-size:1.5rem;padding:16px 0;border-bottom:1px solid var(--sand)">Nuevo</a>
+    <a href="/#prendas" class="mlink" data-close style="display:block;font-family:var(--display);font-size:1.5rem;padding:16px 0;border-bottom:1px solid var(--sand)">Prendas</a>
+    <a href="/#lookbook" class="mlink" data-close style="display:block;font-family:var(--display);font-size:1.5rem;padding:16px 0;border-bottom:1px solid var(--sand)">Lookbook</a>
+    <a href="/#ofertas" class="mlink" data-close style="display:block;font-family:var(--display);font-size:1.5rem;padding:16px 0;border-bottom:1px solid var(--sand)">Ofertas</a>
+    <a href="/#marca" class="mlink" data-close style="display:block;font-family:var(--display);font-size:1.5rem;padding:16px 0">Nosotras</a>
+  </div>
+</aside>
+
+<!-- favoritos -->
+<aside class="drawer" id="favDrawer" aria-label="Favoritos">
+  <div class="drawer__head">
+    <h3>Favoritos</h3>
+    <button class="drawer__close" data-close aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer__body" id="favBody"></div>
+</aside>
+
+<!-- carrito -->
+<aside class="drawer" id="cartDrawer" aria-label="Carrito">
+  <div class="drawer__head">
+    <h3>Tu carrito</h3>
+    <button class="drawer__close" data-close aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot" style="display:none">
+    <div class="subtotal"><span>Subtotal</span><b id="subtotal">S/0</b></div>
+    <p class="ship-note">Envío e impuestos calculados al pagar.</p>
+    <button class="btn btn--solid">Finalizar compra</button>
+  </div>
+</aside>

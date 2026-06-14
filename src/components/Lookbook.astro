@@ -1,0 +1,22 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { lookbook } from '../lib/products.js';
+---
+<section class="section wrap" id="lookbook">
+  <div class="lookbook__head r-up">
+    <div>
+      <p class="eyebrow" style="margin-bottom:.8rem">Lookbook</p>
+      <h2 style="font-family:var(--display);font-weight:500;font-size:clamp(2rem,4.4vw,3.4rem)">Otoño en la <span style="font-style:italic;color:var(--mauve-deep)">ciudad</span></h2>
+    </div>
+    <span class="lb-hint">Arrastra <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+  </div>
+  <div class="lb-scroller" id="lookbook-scroller">
+    {lookbook.map((l) => (
+      <div class="lb-item">
+        <Image src={img(l.img)} alt={l.t} widths={[260, 420, 600]} sizes="(max-width:560px) 70vw, 32vw" loading="lazy" />
+        <div class="lb-item__cap"><b>{l.t}</b><span>{l.s}</span></div>
+      </div>
+    ))}
+  </div>
+</section>

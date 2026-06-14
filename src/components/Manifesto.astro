@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { media } from '../lib/products.js';
+---
+<section class="manifesto section" id="marca">
+  <div class="wrap">
+    <div class="manifesto-grid">
+      <div class="r-up">
+        <p class="eyebrow" style="color:var(--mauve)">Hecho en Perú</p>
+        <h2 style="margin-top:1rem">La fibra más <span class="it">noble</span><br>del mundo, hilada acá.</h2>
+        <p>El algodón pima crece en la costa norte del Perú: hebra larga, suave y resistente. Lo trabajamos en talleres limeños, en tiradas cortas, para que cada prenda dure años y se sienta tuya desde el primer día.</p>
+        <div class="stats">
+          <div class="stat"><b data-count="100" data-suf="%">0%</b><span>Algodón pima</span></div>
+          <div class="stat"><b data-count="30" data-suf="">0</b><span>Piezas por edición</span></div>
+          <div class="stat"><b data-count="1" data-pre="" data-suf="" data-text="Lima">0</b><span>Diseñado y cosido</span></div>
+        </div>
+      </div>
+      <div class="manifesto__media r-up">
+        <div class="par" id="manifestoPar">
+          <Image src={img(media.manifesto)} alt="Detalle de algodón pima" widths={[600, 900, 1100]} sizes="(max-width:860px) 100vw, 45vw" />
+        </div>
+        <span class="manifesto__tag">Pima · costa norte</span>
+      </div>
+    </div>
+  </div>
+</section>

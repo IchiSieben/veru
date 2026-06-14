@@ -1,0 +1,15 @@
+---
+// Cinta superior infinita (movimiento — firma de la marca). CSS puro.
+const items = [
+  'Envío gratis desde S/199', 'Nueva colección · Otoño 26',
+  '100% algodón pima peruano', 'Edición limitada',
+  'Hecho en Lima', 'Cambios sin costo en 30 días',
+];
+// Se duplica la lista para el loop continuo (igual que el original).
+const loop = [...items, ...items];
+---
+<div class="topbar">
+  <div class="marquee" id="marquee">
+    {loop.map((t) => <span>{t}</span>)}
+  </div>
+</div>

@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { categories } from '../lib/products.js';
+---
+<section class="section wrap" id="nuevo">
+  <div class="sec-head r-up">
+    <div>
+      <p class="eyebrow" style="margin-bottom:.8rem">Explorar</p>
+      <h2>Comprar por <span class="it">categoría</span></h2>
+    </div>
+    <a href="/#prendas" class="link-underline" style="margin-bottom:8px">Ver todo</a>
+  </div>
+  <div class="cats r-stag" id="cats">
+    {categories.map((c, i) => (
+      <a class="cat" href="/#prendas" data-cat={c.name}>
+        <Image class="cat__img" src={img(c.img)} alt={c.name} widths={[400, 700, 1000]} sizes="(max-width:1080px) 50vw, 25vw" />
+        <span class="cat__num">0{i + 1}</span>
+        <div class="cat__veil"></div>
+        <div class="cat__body">
+          <div class="cat__name">{c.name}</div>
+          <span class="cat__cta">Ver todo →</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

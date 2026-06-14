@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { media } from '../lib/products.js';
+---
+<section class="section--tight wrap">
+  <div class="drop r-up">
+    <div class="drop__media">
+      <Image src={img(media.drop)} alt="Drop VERÚ" widths={[800, 1200, 1600]} sizes="100vw" loading="lazy" />
+    </div>
+    <div class="drop__inner">
+      <p class="eyebrow" style="color:var(--mauve)">Drop semanal · viernes</p>
+      <h2>Cada viernes,<br>una <span class="it">edición nueva.</span></h2>
+      <p>Tiradas cortas que no se reponen. Suscríbete y entérate primero — hasta −30% en piezas seleccionadas durante el lanzamiento.</p>
+      <div class="countdown" id="countdown">
+        <div class="cd"><b id="cd-d">00</b><span>Días</span></div>
+        <div class="cd"><b id="cd-h">00</b><span>Horas</span></div>
+        <div class="cd"><b id="cd-m">00</b><span>Min</span></div>
+        <div class="cd"><b id="cd-s">00</b><span>Seg</span></div>
+      </div>
+      <a href="/#ofertas" class="btn btn--ghost-light">Ver ofertas <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>

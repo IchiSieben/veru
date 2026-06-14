@@ -1,0 +1,18 @@
+# build output
+dist/
+# dependencies
+node_modules/
+# generated types
+.astro/
+# logs
+npm-debug.log*
+# environment
+.env
+.env.production
+# macOS / editors
+.DS_Store
+*.local
+
+# parity artifacts / logs (generados, no versionar)
+reference/shots/
+preview.log
