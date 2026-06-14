@@ -1,7 +1,8 @@
 ---
 import { getImage } from 'astro:assets';
-import { products } from '../lib/products.js';
+import { products, media } from '../lib/products.js';
 import { img } from '../lib/images.js';
+import { SITE } from '../config.js';
 import '../styles/global.css';
 
 import TopMarquee from '../components/TopMarquee.astro';
@@ -14,21 +15,30 @@ import Floating from '../components/Floating.astro';
 interface Props {
   title?: string;
   description?: string;
+  image?: string; // ruta/URL para OG (si no, se usa una por defecto)
+  ogType?: string;
+  noindex?: boolean;
   onDark?: boolean;
 }
 const {
   title = 'VERÚ — Moda peruana en algodón pima',
   description = 'VERÚ. Prendas de algodón pima diseñadas y confeccionadas en Lima. Edición limitada. Hecho en Perú.',
+  image,
+  ogType = 'website',
+  noindex = false,
   onDark = true,
 } = Astro.props;
 
-// Datos para el cliente (carrito, favoritos, vista rápida, grilla) con imágenes ya
-// optimizadas en build. Reemplazar las fotos en src/assets/img re-genera estos src.
+// Grilla del catálogo: tamaños responsivos para srcset.
+const GRID_WIDTHS = [200, 300, 400, 500, 700];
+const GRID_SIZES = '(max-width:560px) 50vw, (max-width:1080px) 33vw, 25vw';
+
+// Datos para el cliente con imágenes optimizadas (incluye srcset responsivo).
 const clientProducts = await Promise.all(
   products.map(async (p) => {
     const [main, alt, thumb, zoom] = await Promise.all([
-      getImage({ src: img(p.img[0]), width: 700 }),
-      getImage({ src: img(p.img[1]), width: 700 }),
+      getImage({ src: img(p.img[0]), widths: GRID_WIDTHS, sizes: GRID_SIZES }),
+      getImage({ src: img(p.img[1]), widths: GRID_WIDTHS, sizes: GRID_SIZES }),
       getImage({ src: img(p.img[0]), width: 200 }),
       getImage({ src: img(p.img[0]), width: 1000 }),
     ]);
@@ -36,11 +46,28 @@ const clientProducts = await Promise.all(
       id: p.id, slug: p.slug, name: p.name, cat: p.cat,
       price: p.price, old: p.old, badge: p.badge,
       colors: p.colors, sizes: p.sizes, desc: p.desc,
-      imgs: [main.src, alt.src], thumb: thumb.src, zoom: zoom.src,
+      imgs: [main.src, alt.src],
+      srcset: [main.srcSet.attribute, alt.srcSet.attribute],
+      sizesAttr: GRID_SIZES,
+      thumb: thumb.src, zoom: zoom.src,
     };
   })
 );
 const dataJSON = JSON.stringify(clientProducts);
+
+// SEO / OpenGraph
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogDefault = await getImage({ src: img(media.hero), width: 1200 });
+const ogImage = new URL(image || ogDefault.src, Astro.site).href;
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.brand,
+  url: Astro.site?.href,
+  description,
+  address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+};
 ---
 <!DOCTYPE html>
 <html lang="es-PE">
@@ -49,6 +76,21 @@ const dataJSON = JSON.stringify(clientProducts);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  <meta name="robots" content={noindex ? 'noindex,follow' : 'index,follow'} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- OpenGraph / Twitter -->
+  <meta property="og:site_name" content={SITE.brand} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:locale" content="es_PE" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
 
   <!-- Fuentes: Bodoni Moda (display/logo) + Manrope (UI/cuerpo) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -56,6 +98,7 @@ const dataJSON = JSON.stringify(clientProducts);
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script type="application/ld+json" set:html={JSON.stringify(orgLd)} />
   <slot name="head" />
 </head>
 <body>

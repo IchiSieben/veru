@@ -32,10 +32,10 @@ function cardHTML(p) {
       <button class="fav${state.favs.includes(p.id) ? ' on' : ''}" data-fav="${p.id}" aria-label="Favorito">
         <svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-10-9.4C.5 8.2 2 4.5 5.5 4.5 8 4.5 9.6 6 12 8.7 14.4 6 16 4.5 18.5 4.5 22 4.5 23.5 8.2 22 11.6 19.5 16.4 12 21 12 21z"/></svg>
       </button>
-      <img class="card__img card__img--main" src="${p.imgs[0]}" alt="${p.name}" loading="lazy"
-           onerror="this.onerror=null;this.src=fb(this,'${p.name}',['#36202F','#17121B'])">
-      <img class="card__img card__img--alt" src="${p.imgs[1]}" alt="" loading="lazy"
-           onerror="this.onerror=null;this.src=fb(this,'${p.name}',['#492C3F','#8B5A77'])">
+      <img class="card__img card__img--main" src="${p.imgs[0]}" srcset="${p.srcset[0]}" sizes="${p.sizesAttr}" alt="${p.name}" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.removeAttribute('srcset');this.src=fb(this,'${p.name}',['#36202F','#17121B'])">
+      <img class="card__img card__img--alt" src="${p.imgs[1]}" srcset="${p.srcset[1]}" sizes="${p.sizesAttr}" alt="" loading="lazy" decoding="async"
+           onerror="this.onerror=null;this.removeAttribute('srcset');this.src=fb(this,'${p.name}',['#492C3F','#8B5A77'])">
       <div class="card__quick">
         <button class="quick-btn" data-add="${p.id}">Agregar</button>
         <button class="quick-btn quick-btn--ghost" data-quick="${p.id}" aria-label="Vista rápida">

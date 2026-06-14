@@ -1,15 +1,21 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { img } from '../lib/images.js';
 import { media } from '../lib/products.js';
+
+const HERO_WIDTHS = [900, 1400, 1900];
+// Mismos parámetros que el <Image> de abajo => mismas URLs => el preload calienta la imagen correcta.
+const heroOpt = await getImage({ src: img(media.hero), widths: HERO_WIDTHS, sizes: '100vw' });
 ---
+<link rel="preload" as="image" imagesrcset={heroOpt.srcSet.attribute} imagesizes="100vw" fetchpriority="high" />
+
 <section class="hero" id="hero">
   <div class="hero__media" id="heroMedia">
     <Image
       class="hero__img"
       src={img(media.hero)}
       alt="Editorial VERÚ otoño"
-      widths={[900, 1400, 1900]}
+      widths={HERO_WIDTHS}
       sizes="100vw"
       loading="eager"
       fetchpriority="high"

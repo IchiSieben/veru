@@ -51,15 +51,8 @@ const jsonLd = {
   },
 };
 ---
-<Base title={title} description={description} onDark={false}>
+<Base title={title} description={description} image={ogImg.src} ogType="product" onDark={false}>
   <Fragment slot="head">
-    <link rel="canonical" href={canonical} />
-    <meta property="og:type" content="product" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogUrl} />
-    <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary_large_image" />
     <meta property="product:price:amount" content={String(p.price)} />
     <meta property="product:price:currency" content="PEN" />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
