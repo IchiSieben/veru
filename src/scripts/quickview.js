@@ -82,58 +82,92 @@ function applyZoom() {
   $('#modalImg').style.transform = `scale(${zoom}) translate(${panX}px,${panY}px)`;
 }
 
+function zoomTo(stage, z) {
+  zoom = Math.min(3, Math.max(1, z));
+  if (zoom === 1) {
+    panX = panY = 0;
+  }
+  stage.classList.toggle('zoomed', zoom > 1);
+  applyZoom();
+}
+
 export function initQuickview() {
   const stage = $('#modalStage');
   if (!stage) return;
 
-  $('#zoomIn').onclick = () => {
-    zoom = Math.min(zoom + 0.4, 3);
-    stage.classList.toggle('zoomed', zoom > 1);
-    applyZoom();
-  };
-  $('#zoomOut').onclick = () => {
-    zoom = Math.max(zoom - 0.4, 1);
-    if (zoom === 1) {
-      panX = panY = 0;
-    }
-    stage.classList.toggle('zoomed', zoom > 1);
-    applyZoom();
-  };
-  stage.addEventListener('click', (e) => {
-    if (e.target.closest('.zbtn')) return;
-    if (zoom === 1) {
-      zoom = 2;
-      stage.classList.add('zoomed');
-    } else {
-      resetZoom();
-    }
-    applyZoom();
-  });
+  $('#zoomIn').onclick = () => zoomTo(stage, zoom + 0.4);
+  $('#zoomOut').onclick = () => zoomTo(stage, zoom - 0.4);
 
-  // Arrastrar para mover cuando hay zoom.
-  let drag = false,
+  // Pointer Events: cubren mouse y táctil. Un dedo = pan (con zoom); dos dedos = pinch.
+  const pointers = new Map();
+  let dragging = false,
     sx,
     sy,
     bx,
-    by;
-  stage.addEventListener('mousedown', (e) => {
-    if (zoom <= 1) return;
-    drag = true;
-    stage.classList.add('drag');
-    sx = e.clientX;
-    sy = e.clientY;
-    bx = panX;
-    by = panY;
+    by,
+    moved = false,
+    pinchDist = 0,
+    pinchZoom = 1;
+
+  stage.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('.zbtn')) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 1 && zoom > 1) {
+      dragging = true;
+      stage.classList.add('drag');
+      sx = e.clientX;
+      sy = e.clientY;
+      bx = panX;
+      by = panY;
+      try {
+        stage.setPointerCapture(e.pointerId);
+      } catch (err) {}
+    } else if (pointers.size === 2) {
+      dragging = false;
+      const p = [...pointers.values()];
+      pinchDist = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+      pinchZoom = zoom;
+    }
   });
-  window.addEventListener('mousemove', (e) => {
-    if (!drag) return;
-    panX = bx + (e.clientX - sx) / zoom;
-    panY = by + (e.clientY - sy) / zoom;
-    applyZoom();
+
+  stage.addEventListener('pointermove', (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.size === 2 && pinchDist > 0) {
+      const p = [...pointers.values()];
+      const d = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+      moved = true;
+      zoomTo(stage, pinchZoom * (d / pinchDist));
+      e.preventDefault();
+    } else if (dragging) {
+      panX = bx + (e.clientX - sx) / zoom;
+      panY = by + (e.clientY - sy) / zoom;
+      moved = true;
+      applyZoom();
+      e.preventDefault();
+    }
   });
-  window.addEventListener('mouseup', () => {
-    drag = false;
-    stage.classList.remove('drag');
+
+  const endPointer = (e) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinchDist = 0;
+    if (pointers.size === 0) {
+      dragging = false;
+      stage.classList.remove('drag');
+    }
+  };
+  stage.addEventListener('pointerup', endPointer);
+  stage.addEventListener('pointercancel', endPointer);
+
+  // Tap/click para alternar zoom (sólo si no hubo gesto de arrastre o pinch).
+  stage.addEventListener('click', (e) => {
+    if (e.target.closest('.zbtn')) return;
+    if (moved) {
+      moved = false;
+      return;
+    }
+    if (zoom === 1) zoomTo(stage, 2);
+    else resetZoom();
   });
 
   $('#modalAdd').onclick = () => {

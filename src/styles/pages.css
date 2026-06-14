@@ -178,3 +178,34 @@
 .ok__pay{font-size:.88rem;color:var(--on-light-soft);background:var(--mauve-soft);border-radius:var(--r);
   padding:1em 1.2em;margin-top:1rem;line-height:1.8}
 .ok__pay b{color:var(--ink)}
+
+/* ============================================================
+   QA MÓVIL / TÁCTIL
+   ============================================================ */
+/* El escenario del zoom captura los gestos (pinch/pan) sin que el navegador
+   haga scroll o zoom de página encima. */
+.modal__stage{touch-action:none}
+
+/* El campo enfocado no queda bajo el header sticky ni el teclado virtual. */
+.field input,.field select,.field textarea{scroll-margin-top:90px;scroll-margin-bottom:90px}
+
+/* Áreas táctiles cómodas (≥44px) sólo en dispositivos táctiles: no altera el desktop. */
+@media (hover:none) and (pointer:coarse){
+  .btn{min-height:46px}
+  .iconbtn{width:46px;height:46px}
+  .fav{width:44px;height:44px}
+  .fav svg{width:20px;height:20px}
+  .drawer__close,.modal__close,.zbtn{width:46px;height:46px}
+  .qty button{width:44px;height:44px;font-size:1.2rem}
+  .qty span{min-width:32px}
+  .citem__rm{min-height:44px;display:inline-flex;align-items:center;padding:.4em .2em}
+  .size{min-width:48px;min-height:48px;padding:.8em .55em}
+  .chip{padding:.75em 1.25em}
+  .nav__menu a{padding-block:10px}
+  .pay-opt{padding:1.15em 1.1em}
+  .quick-btn{padding:1.1em;min-height:46px}
+  .pdp__thumb{flex-basis:70px}
+  .pdp .swatches .sw{width:26px;height:26px}
+  .footer__social a{width:46px;height:46px}
+  .lb-hint{display:none} /* "Arrastra" no aplica en táctil (scroll nativo) */
+}
