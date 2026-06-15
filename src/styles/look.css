@@ -133,8 +133,9 @@
   .look__bar{position:fixed;left:0;right:0;bottom:0;z-index:70;margin:0;border-radius:0;
     box-shadow:0 -12px 30px -18px rgba(0,0,0,.4);border-top:1px solid var(--sand);
     padding:12px var(--gut) calc(12px + env(safe-area-inset-bottom))}
-  .look__share,.look__shared{display:none}
-  .look{padding-bottom:150px}
+  /* Compartir sí va en móvil (usa Web Share nativo); el aviso "copiado" no hace falta. */
+  .look__shared{display:none}
+  .look{padding-bottom:172px}
 }
 @media (hover:none) and (pointer:coarse){
   .bpiece__rm,.bpiece__pin{opacity:1}

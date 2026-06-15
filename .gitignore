@@ -16,3 +16,4 @@ npm-debug.log*
 # parity artifacts / logs (generados, no versionar)
 reference/shots/
 preview.log
+dev.log
