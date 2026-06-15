@@ -17,5 +17,15 @@ export const SITE = {
   flatShipping: 15,
 };
 
+// Nombres legibles para los hex de producto (filtro por color y chips activos).
+export const COLOR_NAMES = {
+  '#B4849F': 'Malva',
+  '#8B5A77': 'Malva profundo',
+  '#EBDCE4': 'Rosa malva',
+  '#36202F': 'Berenjena',
+  '#17121B': 'Negro',
+  '#E2D8CC': 'Arena',
+};
+
 export const waLink = (text) =>
   `https://wa.me/${SITE.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ''}`;

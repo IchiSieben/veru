@@ -45,7 +45,7 @@ const clientProducts = await Promise.all(
     return {
       id: p.id, slug: p.slug, name: p.name, cat: p.cat,
       price: p.price, old: p.old, badge: p.badge,
-      colors: p.colors, sizes: p.sizes, desc: p.desc,
+      colors: p.colors, sizes: p.sizes, tags: p.tags || [], desc: p.desc,
       imgs: [main.src, alt.src],
       srcset: [main.srcSet.attribute, alt.srcSet.attribute],
       sizesAttr: GRID_SIZES,

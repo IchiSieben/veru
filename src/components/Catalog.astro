@@ -1,5 +1,17 @@
 ---
-import { chipCategories } from '../lib/products.js';
+import { products, categories } from '../lib/products.js';
+import { COLOR_NAMES } from '../config.js';
+
+// Datos de facetas calculados en build.
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL'];
+const sizesAll = [...new Set(products.flatMap((p) => p.sizes))].sort(
+  (a, b) => SIZE_ORDER.indexOf(a) - SIZE_ORDER.indexOf(b)
+);
+const colorsAll = [...new Set(products.flatMap((p) => p.colors))];
+const tagsAll = [...new Set(products.flatMap((p) => p.tags || []))];
+const prices = products.map((p) => p.price);
+const priceMin = Math.min(...prices);
+const priceMax = Math.max(...prices);
 ---
 <section class="section wrap" id="prendas">
   <div class="sec-head r-up">
@@ -10,12 +22,13 @@ import { chipCategories } from '../lib/products.js';
     <p style="max-width:30ch">Piezas pensadas para el día a día limeño: capas ligeras, tejidos cálidos y básicos que no fallan.</p>
   </div>
 
-  <div class="filters r-up">
-    <div class="chips" id="chips">
-      {chipCategories.map((c) => (
-        <button class={`chip${c === 'Todos' ? ' active' : ''}`} data-c={c}>{c}</button>
-      ))}
-    </div>
+  <!-- Barra: botón Filtrar (móvil), conteo y orden -->
+  <div class="cat-toolbar r-up">
+    <button class="filter-btn" id="filterBtn" aria-controls="filterPanel" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+      Filtrar<span class="filter-btn__count" id="filterCount" hidden></span>
+    </button>
+    <p class="result-count" id="resultCount"></p>
     <div class="sortwrap">
       <span>Ordenar</span>
       <select id="sort" aria-label="Ordenar productos">
@@ -26,6 +39,77 @@ import { chipCategories } from '../lib/products.js';
       </select>
     </div>
   </div>
+
+  <!-- Chips de filtros activos -->
+  <div class="active-row" id="activeRow" hidden>
+    <div class="chips" id="activeChips"></div>
+    <button class="clear-filters" id="clearFilters">Limpiar filtros</button>
+  </div>
+
+  <!-- Panel de filtros: inline en desktop, drawer en móvil -->
+  <aside class="filter-panel drawer" id="filterPanel" aria-label="Filtros">
+    <div class="filter-panel__head">
+      <h3>Filtros</h3>
+      <button class="drawer__close" data-filter-close aria-label="Cerrar filtros">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="filter-panel__body">
+      <div class="facet">
+        <h4>Categoría</h4>
+        <div class="chips">
+          {categories.map((c) => (
+            <button class="chip" data-facet="cat" data-val={c.name}>{c.name}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="facet">
+        <h4>Color</h4>
+        <div class="swatch-filter">
+          {colorsAll.map((hex) => (
+            <button class="swf" data-facet="color" data-val={hex} title={COLOR_NAMES[hex] || hex} aria-label={COLOR_NAMES[hex] || hex}>
+              <span style={`background:${hex}`}></span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="facet">
+        <h4>Talla</h4>
+        <div class="chips">
+          {sizesAll.map((s) => (
+            <button class="chip chip--sq" data-facet="size" data-val={s}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="facet">
+        <h4>Ocasión</h4>
+        <div class="chips">
+          {tagsAll.map((t) => (
+            <button class="chip" data-facet="occasion" data-val={t}>{t}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="facet facet--price">
+        <h4>Precio</h4>
+        <div class="range" id="priceRange" data-min={priceMin} data-max={priceMax}>
+          <div class="range__track"><div class="range__fill" id="prFill"></div></div>
+          <input type="range" id="prMin" min={priceMin} max={priceMax} value={priceMin} step="1" aria-label="Precio mínimo" />
+          <input type="range" id="prMax" min={priceMin} max={priceMax} value={priceMax} step="1" aria-label="Precio máximo" />
+        </div>
+        <div class="range__labels"><span id="prMinL">S/{priceMin}</span><span id="prMaxL">S/{priceMax}</span></div>
+      </div>
+    </div>
+
+    <div class="filter-panel__foot">
+      <button class="btn btn--ghost" data-filter-clear>Limpiar</button>
+      <button class="btn btn--solid" data-filter-close>Ver resultados</button>
+    </div>
+  </aside>
 
   <div class="grid" id="grid"></div>
   <div class="loadmore"><button class="btn btn--ghost" id="loadMore">Cargar más <span class="arr">↓</span></button></div>

@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport:{width:1440,height:900} });
+const p = await ctx.newPage();
+const errs=[]; p.on('pageerror',e=>errs.push(String(e)));
+await p.goto('http://localhost:4321/',{waitUntil:'networkidle'});
+await p.waitForTimeout(600);
+await p.$eval('#grid .card [data-add]', b=>b.click());
+await p.waitForTimeout(400);
+const badge = await p.$eval('#cartBadge', e=>e.textContent);
+const drawer = await p.$eval('#cartDrawer', e=>e.classList.contains('open'));
+await p.$eval('#cartDrawer [data-close]', b=>b.click());
+await p.waitForTimeout(200);
+await p.$eval('#grid .card [data-quick]', b=>b.click());
+await p.waitForTimeout(400);
+const modal = await p.$eval('#modal', e=>e.classList.contains('open'));
+console.log(JSON.stringify({badge,drawer,modal,errors:errs.length?errs:'none'}));
+await b.close();
