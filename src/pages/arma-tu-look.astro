@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import LookPiece from '../components/LookPiece.astro';
+import { products } from '../lib/products.js';
+
+// Productos por zona del configurador.
+const torsoProducts = products.filter((p) => p.zone === 'top' || p.zone === 'layer');
+const bottomProducts = products.filter((p) => p.zone === 'bottom');
+const dressProducts = products.filter((p) => p.zone === 'dress');
+
+// Zonas opcionales (se activan cuando existan productos de calzado/accesorios).
+const shoesProducts = products.filter((p) => p.zone === 'shoes');
+const accProducts = products.filter((p) => p.zone === 'accessory');
+
+const title = 'Arma tu look — VERÚ';
+const description =
+  'Combina prendas de algodón pima y planea tu outfit antes de comprar. Apila capas, elige abajo o un vestido, y arma tu look completo.';
+---
+<Base title={title} description={description} onDark={false}>
+  <section class="atelier-head wrap">
+    <p class="eyebrow">Atelier · sin probador</p>
+    <h1 class="display">Arma tu <span class="it">look</span></h1>
+    <p class="atelier-sub">Apila capas como en la mesa de un estilista, prueba combinaciones y plánea tu outfit antes de comprar. Todo en algodón pima, hecho en Lima.</p>
+  </section>
+
+  <section class="look wrap" id="look">
+    <!-- ===== LIENZO (mesa de atelier) ===== -->
+    <div class="look__board-col">
+      <div class="board" id="lookBoard" aria-label="Vista del look">
+        <div class="board__zone board__zone--dress" data-board="dress" hidden></div>
+        <div class="board__zone board__zone--torso" data-board="torso">
+          <div class="board__empty">Tus capas van aquí</div>
+        </div>
+        <div class="board__zone board__zone--bottom" data-board="bottom">
+          <div class="board__empty">Elige una prenda de abajo</div>
+        </div>
+      </div>
+
+      <div class="look__bar">
+        <div class="look__total">
+          <span>Total del look</span>
+          <b id="lookTotal">S/0</b>
+          <small id="lookCount">0 piezas</small>
+        </div>
+        <div class="look__actions">
+          <button class="btn btn--ghost" id="lookSurprise" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h6l10 10v6h-6L4 10z"/><circle cx="7.5" cy="7.5" r="1"/><circle cx="16.5" cy="16.5" r="1"/></svg>
+            Sorpréndeme
+          </button>
+          <button class="btn btn--solid" id="lookAdd" type="button" disabled>Agregar look al carrito</button>
+        </div>
+        <button class="look__share" id="lookShare" type="button" hidden>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>
+          Guardar / compartir
+        </button>
+        <p class="look__shared" id="lookShared" hidden></p>
+      </div>
+    </div>
+
+    <!-- ===== PANEL DE ZONAS ===== -->
+    <div class="look__panel">
+      <!-- Filtros del selector (se rellenan en la Parte B) -->
+      <div class="look-filters" id="lookFilters" hidden></div>
+
+      <div class="zone" data-zone="torso" id="zoneTorso">
+        <div class="zone__head">
+          <div>
+            <p class="zone__label">Capas · torso</p>
+            <p class="zone__hint">Apila base, blusa, abrigo…</p>
+          </div>
+          <button class="zone__add" id="addLayer" type="button">
+            <span aria-hidden="true">+</span> Añadir capa
+          </button>
+        </div>
+        <ul class="layer-list" id="layerList"></ul>
+        <div class="strip" id="stripTorso">{torsoProducts.map((p) => (<LookPiece product={p} zone="torso" />))}</div>
+      </div>
+
+      <div class="zone" data-zone="bottom" id="zoneBottom">
+        <div class="zone__head">
+          <div>
+            <p class="zone__label">Abajo</p>
+            <p class="zone__hint">Pantalón o falda</p>
+          </div>
+        </div>
+        <div class="strip" id="stripBottom">{bottomProducts.map((p) => (<LookPiece product={p} zone="bottom" />))}</div>
+      </div>
+
+      <div class="zone zone--alt" data-zone="dress" id="zoneDress">
+        <div class="zone__head">
+          <div>
+            <p class="zone__label">…o un vestido</p>
+            <p class="zone__hint">Reemplaza capas y abajo</p>
+          </div>
+        </div>
+        <div class="strip" id="stripDress">{dressProducts.map((p) => (<LookPiece product={p} zone="dress" />))}</div>
+      </div>
+
+      {shoesProducts.length > 0 && (
+        <div class="zone" data-zone="shoes" id="zoneShoes">
+          <div class="zone__head"><div><p class="zone__label">Calzado</p></div></div>
+          <div class="strip" id="stripShoes">{shoesProducts.map((p) => (<LookPiece product={p} zone="shoes" />))}</div>
+        </div>
+      )}
+      {accProducts.length > 0 && (
+        <div class="zone" data-zone="accessory" id="zoneAcc">
+          <div class="zone__head"><div><p class="zone__label">Accesorios</p></div></div>
+          <div class="strip" id="stripAcc">{accProducts.map((p) => (<LookPiece product={p} zone="accessory" />))}</div>
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

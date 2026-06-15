@@ -9,6 +9,7 @@ import { initNewsletter } from './newsletter.js';
 import { initPDP } from './pdp.js';
 import { initCheckout } from './checkout.js';
 import { initConfirm } from './confirm.js';
+import { initLook } from './look.js';
 import { renderCart } from './cart.js';
 import { renderFavs } from './favs.js';
 import { load, updateBadges, CART_KEY, FAVS_KEY } from './store.js';
@@ -33,6 +34,7 @@ function boot() {
   initPDP();
   initCheckout();
   initConfirm();
+  initLook();
   refresh();
 
   // Sincronizar entre pestañas.

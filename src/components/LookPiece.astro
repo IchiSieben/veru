@@ -1,0 +1,12 @@
+---
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+interface Props { product: any; zone: string; }
+const { product: p, zone } = Astro.props;
+---
+<button class="piece" data-id={p.id} data-zone={zone} aria-pressed="false" aria-label={`${p.name}, S/${p.price}`}>
+  <span class="piece__img">
+    <Image src={img(p.img[0])} alt={p.name} widths={[120, 200, 280]} sizes="140px" loading="lazy" />
+  </span>
+  <span class="piece__name">{p.name}</span>
+</button>
