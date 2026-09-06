@@ -116,5 +116,46 @@ const orgLd = {
   <script>
     import '../scripts/main.js';
   </script>
+  <!-- Tutorial de apertura (compartido, upstream en Portfolio/shared/tutorial/).
+       Solo en la portada: en checkout estorba. -->
+  <link rel="stylesheet" href="/tutorial/tutorial.css" />
+  <script type="module">
+    if (location.pathname === '/' || location.pathname === '/index.html') {
+      const { createTutorial } = await import('/tutorial/tutorial.js');
+      createTutorial({
+        id: 'veru-tienda',
+        steps: [
+          {
+            title: 'verú',
+            body: 'Una tienda de ropa completa y <b>totalmente estática</b>: catálogo, producto, carrito y checkout, sin backend y sin costo por venta.',
+          },
+          {
+            target: '#cats',
+            title: 'El catálogo',
+            body: 'Filtrá por categoría. Los 17 productos y sus fotos se generan en build: no hay consulta a ninguna base de datos.',
+            placement: 'bottom',
+          },
+          {
+            target: '#grid',
+            title: 'La ficha',
+            body: 'Cada producto tiene su <b>URL propia</b> (<code>/producto/…</code>), así que se puede compartir e indexar como cualquier tienda con servidor.',
+            placement: 'top',
+          },
+          {
+            target: '#cartBtn',
+            title: 'El carrito',
+            body: 'El estado vive en <code>localStorage</code>: sobrevive al refresh y al cierre del navegador, sin sesión ni cuenta.',
+            placement: 'left',
+          },
+          {
+            target: '#cartBtn',
+            title: 'El checkout',
+            body: 'Termina en <b>Yape, Plin o transferencia</b>, que es como se paga de verdad en Perú. El pedido se arma y se envía por WhatsApp.',
+            placement: 'left',
+          },
+        ],
+      });
+    }
+  </script>
 </body>
 </html>
