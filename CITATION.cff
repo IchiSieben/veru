@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you build on this project, a citation or a link back is appreciated."
+type: software
+title: "verú — static storefront"
+authors:
+  - family-names: Palacios Tanaka
+    given-names: Yoichi
+    alias: IchiSieben
+    orcid: ""
+    website: "https://ichisieben.dev"
+repository-code: "https://github.com/IchiSieben/veru"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-09-22
