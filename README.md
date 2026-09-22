@@ -16,7 +16,7 @@ photography for licensed material.
 
 | Layer | Tool |
 |---|---|
-| Site | Astro 5 (SSG) |
+| Site | Astro 4 (SSG) |
 | Behaviour | Vanilla JS, ES modules — no framework |
 | Images | `sharp` via Astro's `<Image>` |
 | SEO | `@astrojs/sitemap`, per-product meta |
@@ -93,7 +93,7 @@ producto por material con licencia.
 
 | Capa | Herramienta |
 |---|---|
-| Sitio | Astro 5 (SSG) |
+| Sitio | Astro 4 (SSG) |
 | Comportamiento | JavaScript vanilla, módulos ES — sin framework |
 | Imágenes | `sharp` vía `<Image>` de Astro |
 | SEO | `@astrojs/sitemap`, meta por producto |
