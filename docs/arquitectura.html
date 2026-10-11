@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arquitectura verú</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a drafting-table page. One sticky tab bar; each tab is a view of the same system
+   (C4 containers → hexagonal components → data → UML flows → deployment → user stories → repository).
+   Dark-first (control room / blueprint); light theme mirrors it. */
+:root{
+  --bg:#0a1020; --paper:#111a2e; --paper2:#162238; --ink:#e7edf8; --ink2:#9fb0cc; --line:#263654; --grid:rgba(127,166,234,.07);
+  --blue:#7fa6ea; --cyan:#4cc9f0; --amber:#f0b545; --green:#5fcf8f; --red:#f08a7c; --violet:#b58cf5;
+  --blue-soft:#18284a; --cyan-soft:#0f2b3a; --amber-soft:#3a2d0f; --green-soft:#12301f; --red-soft:#3b1a16; --violet-soft:#2a1f45;
+  --font-display:"Archivo","Archivo Narrow","Arial Narrow",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#eef2f8; --paper:#ffffff; --paper2:#f5f8fd; --ink:#15213a; --ink2:#4b5873; --line:#d3dbea; --grid:rgba(31,78,156,.06);
+  --blue:#1f4e9c; --cyan:#0a7ea4; --amber:#b56f00; --green:#1d7a4b; --red:#b8382c; --violet:#6b3fc2;
+  --blue-soft:#e3ebfa; --cyan-soft:#dff3fa; --amber-soft:#fff3d6; --green-soft:#dff3e7; --red-soft:#fbe3df; --violet-soft:#ece3fb;
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#eef2f8; --paper:#ffffff; --paper2:#f5f8fd; --ink:#15213a; --ink2:#4b5873; --line:#d3dbea; --grid:rgba(31,78,156,.06);
+  --blue:#1f4e9c; --cyan:#0a7ea4; --amber:#b56f00; --green:#1d7a4b; --red:#b8382c; --violet:#6b3fc2;
+  --blue-soft:#e3ebfa; --cyan-soft:#dff3fa; --amber-soft:#fff3d6; --green-soft:#dff3e7; --red-soft:#fbe3df; --violet-soft:#ece3fb;
+  color-scheme:light}
+
+*{box-sizing:border-box}
+body{background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font-family:var(--font-body);font-size:14.5px;line-height:1.5;padding-inline:clamp(16px,3vw,40px);padding-block:18px 70px}
+h1,h2,h3,h4{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(26px,3.6vw,42px);font-weight:800;font-stretch:85%;letter-spacing:-.01em}
+h2{font-size:clamp(19px,2.2vw,25px);font-weight:700;font-stretch:90%}
+h3{font-size:15.5px;font-weight:700;font-stretch:90%}
+h4{font-size:13.5px;font-weight:700;font-stretch:90%;color:var(--ink2)}
+p{margin:0}
+a{color:var(--cyan)}
+code,pre{font-family:var(--font-mono)}
+code{font-size:12.5px;background:var(--paper2);border:1px solid var(--line);padding:1px 5px;border-radius:4px}
+pre{font-size:12px;line-height:1.5;background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:0}
+pre code{background:none;border:0;padding:0;font-size:inherit}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+button{font:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;display:grid;gap:22px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px 30px}
+.head .sub{color:var(--ink2);max-width:66ch;margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink2)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:4px;overflow-x:auto;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:8px 0;scrollbar-width:thin}
+.tab{appearance:none;border:1px solid transparent;background:none;color:var(--ink2);padding:7px 12px;border-radius:8px;white-space:nowrap;font-weight:500;display:flex;gap:8px;align-items:center}
+.tab .k{font-family:var(--font-mono);font-size:10.5px;color:var(--cyan);opacity:.9}
+.tab[aria-selected="true"]{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.view{display:none;gap:18px}
+.view.active{display:grid}
+
+/* panels */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:10px;min-width:0;align-content:start}
+.panel.flush{padding:0;overflow:hidden}
+.two{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,.8fr);gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:11.5px;padding:2px 8px;border-radius:99px;background:var(--blue-soft);color:var(--blue);font-weight:500;border:1px solid transparent}
+.chip.cyan{background:var(--cyan-soft);color:var(--cyan)}.chip.amber{background:var(--amber-soft);color:var(--amber)}.chip.green{background:var(--green-soft);color:var(--green)}.chip.violet{background:var(--violet-soft);color:var(--violet)}.chip.red{background:var(--red-soft);color:var(--red)}.chip.ghost{background:transparent;border-color:var(--line);color:var(--ink2)}
+.btn{border:1px solid var(--line);background:var(--paper2);color:var(--ink);border-radius:8px;padding:7px 12px;font-weight:500;font-size:13px}
+.btn[aria-pressed="true"]{border-color:var(--cyan);box-shadow:inset 0 0 0 1px var(--cyan);color:var(--cyan)}
+.btn.sm{padding:4px 9px;font-size:12px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);font-weight:500}
+.tbl{overflow-x:auto}
+td .m{font-family:var(--font-mono);font-size:12px}
+.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:13px}
+.kv dt{color:var(--ink2);font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding-top:2px}
+.kv dd{margin:0;min-width:0}
+.note{border-left:3px solid var(--cyan);padding:8px 12px;background:var(--cyan-soft);border-radius:0 8px 8px 0;font-size:13.5px}
+.note.amber{border-color:var(--amber);background:var(--amber-soft)}
+.note.green{border-color:var(--green);background:var(--green-soft)}
+.verdict{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;font-weight:600;font-family:var(--font-display);font-stretch:90%;font-size:15px}
+.verdict.ok{background:var(--green-soft);color:var(--green)}.verdict.warn{background:var(--amber-soft);color:var(--amber)}.verdict.bad{background:var(--red-soft);color:var(--red)}
+
+/* diagram */
+.dia{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.dia svg{width:100%;height:auto;display:block;font-family:var(--font-body)}
+.dia text{fill:var(--ink)}
+.dia .mono{font-family:var(--font-mono)}
+.dia .muted{fill:var(--ink2)}
+.node{cursor:pointer}
+.node rect.box{fill:var(--paper2);stroke:var(--line);stroke-width:1.2;transition:stroke .2s,filter .2s}
+.node:hover rect.box,.node.sel rect.box{stroke:var(--cyan);stroke-width:1.8;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--cyan) 45%,transparent))}
+.node.ext rect.box{stroke-dasharray:5 4}
+.node .kind{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink2)}
+.node .ttl{font-family:var(--font-display);font-weight:700;font-stretch:90%;font-size:14px}
+.node .tech{font-size:10.5px;fill:var(--ink2)}
+.node .tag{font-family:var(--font-mono);font-size:9.5px}
+.edge{fill:none;stroke:var(--line);stroke-width:1.6;transition:stroke .3s,stroke-width .3s}
+.edge.hot{stroke:var(--cyan);stroke-width:2.6;filter:drop-shadow(0 0 6px color-mix(in srgb,var(--cyan) 60%,transparent))}
+.edge.dim{opacity:.25}
+.elabel{font-family:var(--font-mono);font-size:9.5px;fill:var(--ink2);paint-order:stroke;stroke:var(--paper);stroke-width:3px;stroke-linejoin:round}
+.pk{fill:var(--cyan);opacity:.55}
+.pk.one{opacity:1;fill:var(--amber)}
+.dia .toolbar{display:flex;flex-wrap:wrap;gap:6px;padding:12px 12px 4px;border-bottom:1px dashed var(--line);align-items:center}
+.steps{display:grid;gap:6px;list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:13px;opacity:.45;transition:opacity .3s}
+.steps li.on{opacity:1}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--font-mono);font-size:11px;color:var(--cyan);border:1px solid var(--line);border-radius:50%;width:20px;height:20px;display:grid;place-items:center}
+.steps li.on::before{background:var(--cyan);color:var(--bg);border-color:var(--cyan)}
+
+/* hexagonal view */
+.hex{display:grid;grid-template-columns:1fr 1fr 1.1fr 1fr 1fr;gap:10px;align-items:start}
+.col{display:grid;gap:8px}
+.col h4{text-align:center;padding-bottom:6px;border-bottom:1px dashed var(--line)}
+.cell{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:12.5px;display:grid;gap:3px;transition:border-color .2s,box-shadow .2s}
+.cell b{font-family:var(--font-display);font-stretch:90%;font-size:13.5px;font-weight:700}
+.cell small{color:var(--ink2);font-size:11.5px}
+.cell.core{border-color:var(--blue);background:var(--blue-soft)}
+.cell.port{border-style:dashed}
+.cell.lit{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan),0 0 14px color-mix(in srgb,var(--cyan) 35%,transparent)}
+.cell.off{opacity:.35}
+.routes{display:flex;flex-wrap:wrap;gap:6px}
+
+/* deploy */
+.deploy{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:start}
+.deploy .arrow{align-self:center;font-family:var(--font-mono);color:var(--ink2);padding-top:40px}
+.svc{display:grid;gap:6px}
+.svc div{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px}
+.svc div .m{font-family:var(--font-mono);font-size:11px;color:var(--ink2);white-space:nowrap}
+.svc div.k{border-color:var(--cyan)}
+.svc div.x{border-color:var(--violet)}
+.hu{display:grid;gap:10px}
+.hu .card{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px;font-size:13px}
+.hu .card .id{font-family:var(--font-mono);font-size:11px;color:var(--cyan)}
+.hu .card ul{margin:0;padding-left:18px;color:var(--ink2);font-size:12.5px}
+.mermaid{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto;font-family:var(--font-mono);font-size:12px;color:var(--ink2);white-space:pre}
+.foot{color:var(--ink2);font-size:12.5px;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+@media (max-width:980px){.two{grid-template-columns:1fr}.hex{grid-template-columns:1fr 1fr}.deploy{grid-template-columns:1fr}.deploy .arrow{display:none}}
+@media (max-width:560px){.hex{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.edge,.node rect.box,.cell{transition:none}}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">verú · tienda de ropa · Astro estático</div>
+      <h1>Arquitectura de verú</h1>
+      <p class="sub">Una tienda completa sin servidor: el catálogo se construye en el build, el carrito vive en el navegador y el pedido sale por WhatsApp. Tres vistas: contenedores, flujos y despliegue. Haz clic en cualquier caja; reproduce un flujo para ver el recorrido.</p>
+    </div>
+    <div class="legend">
+      <span style="--c:var(--blue)">este repo</span>
+      <span style="--c:var(--violet)">persona o máquina de trabajo</span>
+      <span style="--c:var(--amber)">servicio externo</span>
+      <span style="--c:var(--cyan)">tráfico</span>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" data-v="c4" aria-selected="true"><span class="k">C4·2</span>Contenedores</button>
+    <button class="tab" role="tab" data-v="flows"><span class="k">UML</span>Flujos</button>
+    <button class="tab" role="tab" data-v="deploy"><span class="k">OPS</span>Despliegue</button>
+  </nav>
+
+  <section class="view active" data-v="c4">
+    <div class="two">
+      <div class="dia" id="c4dia">
+        <div class="toolbar" id="flowbar"></div>
+        <svg viewBox="0 0 1200 690" id="c4svg" aria-label="Diagrama de contenedores"></svg>
+      </div>
+      <div class="panel" id="c4panel">
+        <div class="eyebrow">Detalle</div>
+        <h3 id="pn-t">Haz clic en un contenedor</h3>
+        <p id="pn-r" style="color:var(--ink2)">Cada caja es una pieza que corre por separado: el navegador de quien compra, el almacenamiento local, el sitio estático o un servicio externo. Las líneas son llamadas reales: protocolo y qué viaja.</p>
+        <dl class="kv" id="pn-kv"></dl>
+        <div class="chips" id="pn-chips"></div>
+        <div id="pn-steps-wrap" hidden>
+          <div class="eyebrow" style="margin-top:6px">Flujo en curso</div>
+          <ol class="steps" id="pn-steps"></ol>
+        </div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="panel"><h3>Por qué sin backend</h3><p style="color:var(--ink2);font-size:13.5px">El catálogo son 17 productos que cambian poco: se resuelven en el build y cada uno tiene su URL propia. No hay base de datos, ni API, ni costo por venta. La parte dinámica (carrito, favoritos, checkout) es JavaScript sin framework en el navegador.</p></div>
+      <div class="panel"><h3>Por qué WhatsApp y no una pasarela</h3><p style="color:var(--ink2);font-size:13.5px">El checkout arma el pedido y abre WhatsApp con el detalle. El pago se coordina a mano por Yape, Plin, transferencia o contra entrega: la página solo muestra las instrucciones, no cobra nada. Es una demo de marca inventada, sin pagos reales.</p></div>
+      <div class="panel"><h3>Qué guarda el navegador</h3><p style="color:var(--ink2);font-size:13.5px">Cuatro claves en <code>localStorage</code>: carrito, favoritos, historial de pedidos y último pedido. Los precios no se leen de ahí: se resuelven de nuevo desde los datos del build en cada render.</p></div>
+    </div>
+  </section>
+
+  <section class="view" data-v="flows">
+    <div class="grid2">
+      <div class="panel">
+        <div class="eyebrow">Secuencia · una visita</div>
+        <pre class="mermaid">sequenceDiagram
+    autonumber
+    actor V as Visitante
+    participant B as Navegador
+    participant S as Sitio estático
+    participant F as Google Fonts
+    V->>B: abre la portada
+    B->>S: GET / (HTML, JS, imágenes optimizadas)
+    S-->>B: página ya construida con los datos de producto embebidos
+    B->>F: hoja de estilos de las fuentes
+    V->>B: filtra por categoría y añade una prenda
+    B->>B: guarda el carrito en localStorage (veru.cart)</pre>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">Secuencia · una compra, del carrito a WhatsApp</div>
+        <pre class="mermaid">sequenceDiagram
+    autonumber
+    actor V as Visitante
+    participant B as Navegador
+    participant L as localStorage
+    participant W as WhatsApp
+    V->>B: rellena el checkout y confirma
+    B->>B: valida, calcula envío y total, genera el código de pedido
+    B->>L: guarda veru.orders y veru.lastOrder
+    B->>W: abre el enlace con el texto del pedido
+    B->>B: vacía el carrito y va a /pedido-confirmado
+    B->>L: lee veru.lastOrder
+    B->>V: resumen e instrucciones de pago (solo texto)</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" data-v="deploy">
+    <div class="panel">
+      <div class="eyebrow">Despliegue · lo que hay y lo que cambiaría</div>
+      <h2>Hoy un build local que produce archivos estáticos. El destino final está por confirmar.</h2>
+      <p style="color:var(--ink2);max-width:80ch">El resultado es un directorio <code>dist/</code> sin proceso en ejecución. La tienda usa rutas reales (<code>/producto/…</code>), así que necesita raíz propia: un subdominio, no una subcarpeta.</p>
+      <div class="deploy">
+        <div class="panel" style="background:var(--paper2)">
+          <h3>Hoy · build en el PC Windows</h3>
+          <div class="svc">
+            <div class="k"><span>npm run build (Astro 4, sharp)</span><span class="m">dist/</span></div>
+            <div class="k"><span>20 páginas: portada, 17 productos, checkout, confirmación…</span><span class="m">estático</span></div>
+            <div class="k"><span>sitemap sin checkout ni confirmación</span><span class="m">@astrojs/sitemap</span></div>
+            <div><span>host y subdominio final</span><span class="m">por confirmar</span></div>
+            <div><span>cómo llega dist/ al host</span><span class="m">por confirmar</span></div>
+          </div>
+          <p style="font-size:12.5px;color:var(--ink2)">El repo no trae workflow de despliegue; el código vive en GitHub.</p>
+        </div>
+        <div class="arrow">→ mismo dist/ →</div>
+        <div class="panel" style="background:var(--paper2)">
+          <h3>Al crecer · un backend en las costuras</h3>
+          <div class="svc">
+            <div class="k"><span>raíz propia, cualquier hosting estático</span><span class="m">sin cambios de código</span></div>
+            <div class="x"><span>catálogo desde un CMS en vez de products.json</span><span class="m">documentado, no hecho</span></div>
+            <div class="x"><span>pasarela de pago en vez de WhatsApp</span><span class="m">documentado, no hecho</span></div>
+          </div>
+          <p style="font-size:12.5px;color:var(--ink2)">docs/ARCHITECTURE.md describe esos puntos de extensión; ninguno está implementado.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Arquitectura v1 · 2026-10-10 · verú</span>
+    <span>C4 · UML (secuencia) · despliegue</span>
+  </footer>
+</div>
+
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- tabs ---------- */
+const tabs = [...document.querySelectorAll(".tab")], views = [...document.querySelectorAll(".view")];
+function showTab(v){
+  tabs.forEach(t=>t.setAttribute("aria-selected", String(t.dataset.v===v)));
+  views.forEach(s=>s.classList.toggle("active", s.dataset.v===v));
+  try{ localStorage.setItem("arq-tab", v); }catch(e){}
+}
+tabs.forEach(t=>t.addEventListener("click", ()=>showTab(t.dataset.v)));
+let initial = "c4"; try{ initial = localStorage.getItem("arq-tab") || "c4"; }catch(e){}
+if(location.hash && tabs.some(t=>t.dataset.v===location.hash.slice(1))) initial = location.hash.slice(1);
+if(!tabs.some(t=>t.dataset.v===initial)) initial = tabs[0].dataset.v; // stored tab may belong to another page on this origin
+showTab(initial);
+
+/* ---------- C4 containers ---------- */
+const N = {
+  vis:  {x:20,y:250,w:190,h:110,kind:"persona · navegador",ttl:"Visitante",tech:"quien compra",color:"violet",
+         resp:"Navega el catálogo, arma looks, llena el carrito y confirma el pedido. No hay cuentas ni login.",
+         kv:{"Hace":"filtrar, ver fichas, carrito, checkout","No hay":"sesión ni registro"}},
+  cli:  {x:300,y:220,w:210,h:200,kind:"navegador · js vanilla",ttl:"Scripts del cliente",tech:"módulos ES · main.js · cart · checkout · confirm",color:"blue",
+         resp:"main.js arranca los módulos: catálogo, carrito, favoritos, checkout y confirmación. Calcula el envío y el total, genera el código de pedido y arma el mensaje de WhatsApp.",
+         kv:{"Entrada":"datos de producto embebidos en la página","Regla de envío":"gratis desde un monto, tarifa plana por debajo","Framework":"ninguno"}},
+  ls:   {x:680,y:320,w:220,h:100,kind:"navegador · almacenamiento",ttl:"localStorage",tech:"veru.cart · veru.favs · veru.orders · veru.lastOrder",color:"blue",
+         resp:"Guarda carrito y favoritos en cada cambio y el pedido al confirmar. Si el almacenamiento no está disponible, la tienda sigue en memoria.",
+         kv:{"Sincroniza":"entre pestañas con el evento storage","Precios":"no se guardan: se resuelven de los datos del build"}},
+  web:  {x:680,y:40,w:220,h:110,kind:"host por confirmar · archivos estáticos",ttl:"Sitio estático",tech:"dist/ · HTML por ruta · imágenes optimizadas",color:"blue",
+         resp:"Lo que recibe el visitante: una página por ruta (portada, una por producto, arma tu look, checkout, confirmación), ya construida, con los datos de producto embebidos.",
+         kv:{"Rutas":"/producto/&lt;slug&gt; indexables","Host":"por confirmar"}},
+  fonts:{x:680,y:190,w:220,h:90,kind:"externo · fuentes",ttl:"Google Fonts",tech:"hoja de estilos + archivos de fuente",color:"amber",ext:true,
+         resp:"Sirve las tipografías de la marca. Es la única petición de terceros que hace la página al cargar.",
+         kv:{"Fuentes":"Bodoni Moda · Manrope"}},
+  wa:   {x:680,y:490,w:220,h:100,kind:"externo · mensajería",ttl:"WhatsApp",tech:"enlace con el texto del pedido",color:"amber",ext:true,
+         resp:"Recibe el pedido como texto prellenado: productos, tallas, totales, datos de entrega y método de pago. Allí se coordina el pago a mano.",
+         kv:{"Viaja":"texto codificado en la URL","Pago":"solo instrucciones, nada automático"}},
+  dev:  {x:20,y:485,w:190,h:110,kind:"pc windows · build",ttl:"Build local",tech:"Astro 4 · sharp · npm run build",color:"violet",ext:true,
+         resp:"Instala dependencias y construye dist/ con las páginas, el sitemap y las imágenes optimizadas. También hace commit y push del código.",
+         kv:{"Corre en":"PC Windows","Salida":"dist/ (20 páginas)"}},
+  gh:   {x:300,y:500,w:210,h:80,kind:"externo · git",ttl:"GitHub",tech:"repo público de la tienda",color:"amber",ext:true,
+         resp:"Guarda el código fuente. El repo no incluye workflow de despliegue: cómo llega dist/ al host está por confirmar.",
+         kv:{"Contiene":"código, datos de catálogo, README, docs"}},
+};
+const E = [
+  {id:"e1",a:"cli",as:"r",b:"web",bs:"l",l:"GET HTML estático",ay:-90,by:0},
+  {id:"e2",a:"cli",as:"r",b:"fonts",bs:"l",l:"CSS + fuentes",ay:-50,by:0},
+  {id:"e3",a:"vis",as:"r",b:"cli",bs:"l",l:"clic, formulario",ay:0,by:0},
+  {id:"e4",a:"cli",as:"r",b:"ls",bs:"l",l:"carrito, favoritos",ay:10,by:-30},
+  {id:"e5",a:"cli",as:"r",b:"ls",bs:"l",l:"pedido al confirmar",ay:35,by:0},
+  {id:"e6",a:"ls",as:"l",b:"cli",bs:"r",l:"lee último pedido",ay:35,by:85},
+  {id:"e7",a:"cli",as:"b",b:"wa",bs:"l",l:"wa.me · texto",ay:0,by:0},
+  {id:"e8",a:"dev",as:"r",b:"gh",bs:"l",l:"git push",ay:0,by:0},
+];
+const FLOWS = [
+  {id:"visita",t:"Una visita",steps:[["e1","El navegador pide la página: HTML ya construido, con los datos de producto embebidos"],["e2","Pide la hoja de estilos de las fuentes a Google Fonts"],["e3","El visitante filtra por categoría y pulsa añadir al carrito"],["e4","El carrito se guarda en localStorage y sobrevive al refresh"]]},
+  {id:"compra",t:"Una compra: carrito → WhatsApp",steps:[["e3","El visitante llena el checkout y confirma"],["e5","Valida los campos, calcula envío y total, genera el código y guarda el pedido"],["e7","Abre WhatsApp con el detalle del pedido y vacía el carrito"],["e1","Va a /pedido-confirmado, que es otra página estática"],["e6","Lee el último pedido y muestra el resumen con las instrucciones de pago"]]},
+];
+const svg = $("#c4svg"), NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs={}, parent=svg){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+function anchor(n, side, off=0){ const c=N[n]; const m={l:[c.x,c.y+c.h/2+off],r:[c.x+c.w,c.y+c.h/2+off],t:[c.x+c.w/2+off,c.y],b:[c.x+c.w/2+off,c.y+c.h]}; return m[side]; }
+function pathFor(e){
+  const [x1,y1]=anchor(e.a,e.as,e.ay), [x2,y2]=anchor(e.b,e.bs,e.by);
+  const h = (e.as==="l"||e.as==="r"), k = Math.max(40, Math.abs(h?x2-x1:y2-y1)/2);
+  const c1 = h ? [x1+(e.as==="r"?k:-k), y1] : [x1, y1+(e.as==="b"?k:-k)];
+  const c2 = (e.bs==="l"||e.bs==="r") ? [x2+(e.bs==="l"?-k:k), y2] : [x2, y2+(e.bs==="t"?-k:k)];
+  return {d:`M${x1},${y1} C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${x2},${y2}`, mid:[(x1+x2)/2,(y1+y2)/2]};
+}
+const defs = el("defs");
+const mk = el("marker",{id:"arr",viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"7",markerHeight:"7",orient:"auto-start-reverse"},defs);
+el("path",{d:"M0,0 L10,5 L0,10 z",fill:"var(--line)"},mk);
+const gE = el("g"), gL = el("g"), gN = el("g"), gP = el("g");
+E.forEach(e=>{
+  const p = pathFor(e);
+  const path = el("path",{id:"p-"+e.id,d:p.d,class:"edge","marker-end":"url(#arr)"},gE);
+  if(e.dash) path.setAttribute("stroke-dasharray","4 4");
+  e.path = path;
+  if(e.l){ el("text",{x:p.mid[0],y:p.mid[1]-6,class:"elabel","text-anchor":"middle"},gL).textContent = e.l; }
+  if(!reduce && !e.dash){ // ambient traffic
+    const c = el("circle",{r:"3.2",class:"pk"},gP);
+    const am = el("animateMotion",{dur:(2.8+Math.random()*1.6).toFixed(1)+"s",repeatCount:"indefinite",begin:(Math.random()*3).toFixed(1)+"s"},c);
+    const mp = el("mpath",{},am); mp.setAttribute("href","#p-"+e.id); mp.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","#p-"+e.id);
+  }
+});
+const COL = {blue:"var(--blue)",violet:"var(--violet)",amber:"var(--amber)"};
+Object.entries(N).forEach(([id,n])=>{
+  const g = el("g",{class:"node"+(n.ext?" ext":""),"data-id":id,tabindex:"0",role:"button"},gN);
+  el("rect",{class:"box",x:n.x,y:n.y,width:n.w,height:n.h,rx:"10"},g);
+  el("rect",{x:n.x,y:n.y,width:"5",height:n.h,rx:"2.5",fill:COL[n.color]},g);
+  el("text",{x:n.x+16,y:n.y+18,class:"kind"},g).textContent = n.kind;
+  el("text",{x:n.x+16,y:n.y+38,class:"ttl"},g).textContent = n.ttl;
+  // wrap tech line
+  const words = n.tech.split(" "); let line="", ly=n.y+56, lines=[];
+  words.forEach(w=>{ if((line+" "+w).length>Math.max(18,Math.floor(n.w/6.2))){lines.push(line);line=w;} else line=(line?line+" ":"")+w; }); lines.push(line);
+  lines.slice(0, Math.floor((n.h-60)/14)).forEach((t,i)=>{ el("text",{x:n.x+16,y:ly+i*14,class:"tech"},g).textContent=t; });
+  if(id==="usr"){ ["Operador","Revisor","Validador ×4","Analista","Auditor","Admin plantillas"].forEach((r,i)=>{ const y=n.y+90+i*19; el("rect",{x:n.x+16,y:y-11,width:"110",height:"16",rx:"8",fill:"var(--violet-soft)"},g); el("text",{x:n.x+24,y:y+1,class:"tag",fill:"var(--violet)"},g).textContent=r; }); }
+  if(id==="wrk"){ ["normalizar","clasificar","extraer"].forEach((r,i)=>{ const x=n.x+16+i*64; el("rect",{x:x,y:n.y+118,width:"58",height:"18",rx:"9",fill:"var(--blue-soft)"},g); el("text",{x:x+29,y:n.y+130,class:"tag","text-anchor":"middle",fill:"var(--blue)"},g).textContent=r; }); }
+  if(id==="api"){ ["dominio","reglas","puertos"].forEach((r,i)=>{ const x=n.x+16+i*64; el("rect",{x:x,y:n.y+100,width:"58",height:"18",rx:"9",fill:"var(--blue-soft)"},g); el("text",{x:x+29,y:n.y+112,class:"tag","text-anchor":"middle",fill:"var(--blue)"},g).textContent=r; }); }
+  g.addEventListener("click", ()=>selectNode(id));
+  g.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();selectNode(id);} });
+});
+// frame labels
+el("text",{x:20,y:640,class:"mono muted","font-size":"10"}).textContent = "C4 · nivel 2 (contenedores) · tráfico ambiente = llamadas reales · clic en una caja para el detalle";
+el("text",{x:20,y:660,class:"mono muted","font-size":"10"}).textContent = "línea continua = HTTP/SQL · punteada = adaptador elegido por configuración · caja punteada = existe fuera del proyecto";
+
+function selectNode(id){
+  document.querySelectorAll(".node").forEach(n=>n.classList.toggle("sel", n.dataset.id===id));
+  const n = N[id];
+  $("#pn-t").textContent = n.ttl; $("#pn-r").textContent = n.resp;
+  $("#pn-kv").innerHTML = Object.entries(n.kv||{}).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join("");
+  $("#pn-chips").innerHTML = `<span class="chip ${n.color==='violet'?'violet':n.color==='amber'?'amber':''}">${n.kind}</span>` + n.tech.split("·").map(t=>`<span class="chip ghost">${t.trim()}</span>`).join("");
+  $("#pn-steps-wrap").hidden = true;
+  // dim unrelated edges
+  E.forEach(e=>{ e.path.classList.toggle("dim", !(e.a===id||e.b===id)); e.path.classList.remove("hot"); });
+}
+let flowTimers = [];
+function runFlow(f){
+  flowTimers.forEach(clearTimeout); flowTimers=[];
+  document.querySelectorAll(".node").forEach(n=>n.classList.remove("sel"));
+  document.querySelectorAll("#flowbar .btn").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.f===f.id)));
+  E.forEach(e=>{ e.path.classList.remove("hot"); e.path.classList.toggle("dim", true); });
+  $("#pn-t").textContent = f.t; $("#pn-r").textContent = "Mira el recorrido en el diagrama. Cada paso enciende la llamada real que lo cumple.";
+  $("#pn-kv").innerHTML = ""; $("#pn-chips").innerHTML = "";
+  const ol = $("#pn-steps"); ol.innerHTML = f.steps.map(s=>`<li>${s[1]}</li>`).join(""); $("#pn-steps-wrap").hidden = false;
+  const gap = reduce ? 150 : 1100;
+  f.steps.forEach((s,i)=>{
+    flowTimers.push(setTimeout(()=>{
+      const e = E.find(x=>x.id===s[0]); e.path.classList.remove("dim"); e.path.classList.add("hot");
+      [...ol.children].forEach((li,k)=>li.classList.toggle("on", k===i));
+      [e.a,e.b].forEach(id=>document.querySelector(`.node[data-id="${id}"]`).classList.add("sel"));
+      if(!reduce){
+        const c = el("circle",{r:"5",class:"pk one"},gP);
+        const am = el("animateMotion",{dur:"1s",begin:"indefinite",fill:"freeze"},c);
+        const mp = el("mpath",{},am); mp.setAttribute("href","#p-"+e.id); mp.setAttributeNS("http://www.w3.org/1999/xlink","xlink:href","#p-"+e.id);
+        am.beginElement(); setTimeout(()=>c.remove(), 1200);
+      }
+    }, i*gap));
+  });
+  flowTimers.push(setTimeout(()=>{ E.forEach(e=>e.path.classList.remove("dim")); }, f.steps.length*gap+800));
+}
+$("#flowbar").innerHTML = `<span class="chip cyan" style="align-self:center">reproducir flujo</span>` + FLOWS.map(f=>`<button class="btn sm" data-f="${f.id}" aria-pressed="false">${f.t}</button>`).join("");
+$("#flowbar").addEventListener("click", e=>{ const b=e.target.closest("button"); if(!b) return; runFlow(FLOWS.find(f=>f.id===b.dataset.f)); });
+if(reduce && svg.pauseAnimations) svg.pauseAnimations();
+
+/* ---------- hexagonal ---------- */
+const HEX = {cols:[],cells:[],routes:[]};
+if($("#hex")){ // the hex view is optional (manual §1.5): its section may be deleted
+$("#hex").innerHTML = HEX.cols.map((c,i)=>`<div class="col"><h4>${c}</h4>${HEX.cells[i].map(x=>`<div class="cell ${x.core?'core':''} ${x.port?'port':''}" data-id="${x.id}"><b>${x.b}</b><small>${x.s}</small></div>`).join("")}</div>`).join("");
+$("#routes").innerHTML = HEX.routes.map(r=>`<button class="btn sm" data-r="${r.id}" aria-pressed="false">${r.t}</button>`).join("");
+$("#routes").addEventListener("click", e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  const r = HEX.routes.find(x=>x.id===b.dataset.r);
+  const same = b.getAttribute("aria-pressed")==="true";
+  document.querySelectorAll("#routes .btn").forEach(x=>x.setAttribute("aria-pressed","false"));
+  document.querySelectorAll("#hex .cell").forEach(c=>{ c.classList.remove("lit","off"); });
+  if(same) return;
+  b.setAttribute("aria-pressed","true");
+  document.querySelectorAll("#hex .cell").forEach(c=>{ c.classList.toggle("lit", r.on.includes(c.dataset.id)); c.classList.toggle("off", !r.on.includes(c.dataset.id)); });
+});
+}
+
+/* ---------- user stories ---------- */
+const HU = [];
+if($("#hulist")) $("#hulist").innerHTML = HU.map(h=>`<div class="card"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span class="id">${h.id} · semana ${h.w.slice(1)}</span><span class="chips">${h.comp.map(c=>`<span class="chip ghost">${c}</span>`).join("")}</span></div><div><b>Como</b> ${h.como}, <b>quiero</b> ${h.quiero}, <b>para</b> ${h.para}.</div><ul>${h.crit.map(c=>`<li>${c}</li>`).join("")}</ul></div>`).join("");
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<script>
+(function(){
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  mermaid.initialize({startOnLoad:false, theme: dark?'dark':'default', securityLevel:'loose'});
+  function render(){ const v=document.querySelector('.view.active'); if(!v) return;
+    const n=[...v.querySelectorAll('pre.mermaid:not([data-processed])')]; if(n.length) mermaid.run({nodes:n}); }
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>setTimeout(render,30)));
+  window.addEventListener('load',render);
+})();
+</script>
+</body></html>

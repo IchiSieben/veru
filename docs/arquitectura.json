@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "slug": "veru",
+  "name": {"es": "verú", "en": "verú"},
+  "oneLiner": {
+    "es": "Tienda de ropa estática: catálogo en el build, carrito en el navegador y pedido por WhatsApp, sin backend.",
+    "en": "Static clothing store: catalogue built at build time, cart in the browser and order sent over WhatsApp, no backend."
+  },
+  "machines": ["Navegador del usuario", "PC Windows", "GitHub"],
+  "containers": 8,
+  "calls": 8,
+  "flows": 2,
+  "views": ["c4", "flows", "deploy"],
+  "hasCore": false,
+  "updated": "2026-10-10",
+  "status": "done",
+  "landing": {"projectSlug": "veru", "order": 40}
+}
